@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propuesta Green Point</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a field ledger. Long editorial column, mono labels for units and sources, one harvest-gold accent reserved for the figure that matters in each chart. */
+:root {
+  --paper: #F5F6F0;
+  --card: #FFFFFF;
+  --ink: #102A21;
+  --muted: #4F625A;
+  --leaf: #2E7D4F;
+  --leaf-soft: #DCEBDD;
+  --harvest: #B87A0C;
+  --line: #D3DBCF;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D1D17; --card: #14291F; --ink: #EAF1EA; --muted: #A5B8AE;
+    --leaf: #5BBE83; --leaf-soft: #1C3A2C; --harvest: #E5B24A; --line: #28453A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D1D17; --card: #14291F; --ink: #EAF1EA; --muted: #A5B8AE;
+  --leaf: #5BBE83; --leaf-soft: #1C3A2C; --harvest: #E5B24A; --line: #28453A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--body); font-size: 17px; line-height: 1.6;
+}
+a { color: var(--leaf); }
+:focus-visible { outline: 3px solid var(--harvest); outline-offset: 3px; border-radius: 4px; }
+.wrap { width: 100%; max-width: 980px; margin: 0 auto; padding: 0 20px; }
+.mono { font-family: var(--mono); font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+h1, h2, h3 { font-family: var(--display); font-weight: 500; line-height: 1.12; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(30px, 5vw, 46px); }
+h3 { font-size: 24px; }
+p { margin: 0; }
+.lead { font-size: 19px; color: var(--muted); max-width: 62ch; }
+
+/* top bar */
+.top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 12px; padding-bottom: 12px; }
+.brand { font-family: var(--display); font-size: 20px; font-weight: 600; }
+.brand small { font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin-left: 8px; }
+.top nav { display: flex; gap: 18px; font-size: 14px; }
+.top nav a { color: var(--muted); text-decoration: none; }
+.top nav a:hover { color: var(--ink); }
+@media (max-width: 760px) { .top nav { display: none; } .brand small { display: none; } }
+
+/* hero */
+.hero { padding: 64px 0 40px; }
+.hero h1 { font-size: clamp(54px, 12vw, 128px); letter-spacing: -.02em; margin: 14px 0 22px; }
+.hero h1 em { font-style: italic; color: var(--leaf); }
+.hero .ask { margin-top: 30px; padding: 20px 22px; border-left: 4px solid var(--harvest); background: var(--card); border-radius: 0 10px 10px 0; font-family: var(--display); font-size: 24px; line-height: 1.3; max-width: 640px; }
+
+/* confidentiality */
+.notice { margin: 28px 0 0; padding: 18px 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); display: grid; gap: 6px; }
+.notice p { font-size: 15px; color: var(--muted); }
+
+section { padding: 56px 0; border-top: 1px solid var(--line); }
+.sec-head { display: grid; gap: 12px; margin-bottom: 28px; }
+
+/* path diagram */
+.path { display: grid; grid-template-columns: 1fr auto 1fr auto 1.3fr auto 1fr; align-items: stretch; gap: 10px; margin: 8px 0 0; }
+.node { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 6px; align-content: start; }
+.node.you { border-color: var(--leaf); background: var(--leaf-soft); }
+.node b { font-family: var(--display); font-size: 21px; font-weight: 600; line-height: 1.15; }
+.node span { font-size: 14.5px; color: var(--muted); }
+.node ul { margin: 4px 0 0; padding-left: 18px; font-size: 14.5px; color: var(--muted); }
+.arrow { align-self: center; color: var(--leaf); font-family: var(--mono); font-size: 20px; }
+.back { margin-top: 12px; font-size: 14.5px; color: var(--muted); display: flex; gap: 10px; align-items: baseline; }
+.back::before { content: "↺"; color: var(--harvest); font-size: 18px; }
+@media (max-width: 860px) {
+  .path { grid-template-columns: 1fr; }
+  .arrow { transform: rotate(90deg); justify-self: center; }
+}
+
+/* charts */
+.chart { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: grid; gap: 14px; }
+.chart + .chart { margin-top: 18px; }
+.chart h3 { font-size: 22px; }
+.bars { display: grid; gap: 10px; }
+.bar { display: grid; grid-template-columns: minmax(96px, 170px) 1fr; align-items: center; gap: 12px; background: none; border: 0; padding: 4px 0; text-align: left; font: inherit; color: inherit; cursor: pointer; border-radius: 6px; }
+.bar .lbl { font-size: 14.5px; line-height: 1.25; }
+.track { position: relative; height: 26px; background: color-mix(in srgb, var(--leaf-soft) 70%, transparent); border-radius: 4px; }
+.fill { position: absolute; inset: 0 auto 0 0; background: var(--leaf); border-radius: 4px; transition: width .7s cubic-bezier(.2,.7,.2,1); }
+.bar.hot .fill { background: var(--harvest); }
+.bar .val { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+.bar:hover .track, .bar.sel .track { outline: 2px solid var(--line); }
+.baseline { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); opacity: .55; }
+.readout { min-height: 3.2em; font-size: 15.5px; border-top: 1px dashed var(--line); padding-top: 12px; }
+.src { font-size: 12.5px; color: var(--muted); font-family: var(--mono); }
+.src a { color: var(--muted); }
+
+.toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 3px; width: fit-content; }
+.toggle button { border: 0; background: none; color: var(--muted); font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 999px; cursor: pointer; }
+.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.hund { display: flex; height: 54px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+.hund .p { background: var(--harvest); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 14px; transition: width .6s cubic-bezier(.2,.7,.2,1); min-width: 52px; }
+.hund .r { flex: 1; background: color-mix(in srgb, var(--leaf-soft) 80%, transparent); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--muted); text-align: center; padding: 0 8px; }
+[data-theme="dark"] .hund .p { color: #1a1204; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hund .p { color: #1a1204; } }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 18px; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 6px; align-content: start; }
+.tile .n { font-family: var(--display); font-size: 44px; line-height: 1; font-weight: 500; }
+.tile .n small { font-size: 18px; color: var(--muted); }
+.tile p { font-size: 14.5px; color: var(--muted); }
+
+/* roles */
+.roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.role { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: grid; gap: 10px; align-content: start; }
+.role.tv { border-color: var(--leaf); }
+.role ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.callout { margin-top: 18px; padding: 18px 20px; border-radius: 12px; background: var(--leaf-soft); font-size: 17px; }
+
+/* tabs */
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tabs button { border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-size: 15px; padding: 10px 16px; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.panel div { display: grid; gap: 6px; align-content: start; }
+.panel .mono { color: var(--leaf); }
+
+/* steps */
+.steps { display: grid; gap: 10px; counter-reset: s; }
+.step { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.step button { width: 100%; display: grid; grid-template-columns: 44px 1fr 24px; align-items: center; gap: 12px; text-align: left; background: none; border: 0; padding: 16px 18px; font: inherit; color: inherit; cursor: pointer; }
+.step .no { font-family: var(--mono); font-size: 15px; color: var(--harvest); }
+.step .t { font-family: var(--display); font-size: 22px; font-weight: 500; }
+.step .chev { color: var(--muted); transition: transform .2s; }
+.step[data-open="true"] .chev { transform: rotate(90deg); }
+.step .body { display: none; padding: 0 18px 18px 74px; color: var(--muted); }
+.step[data-open="true"] .body { display: block; }
+.step .body p + p { margin-top: 10px; }
+@media (max-width: 520px) { .step .body { padding-left: 18px; } }
+.sheet { overflow-x: auto; margin-top: 22px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.sheet table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+.sheet th, .sheet td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: bottom; }
+.sheet th { font-family: var(--mono); font-size: 11.5px; font-weight: 500; letter-spacing: .03em; text-transform: uppercase; color: var(--muted); }
+.sheet td.blank { height: 40px; }
+.sheet tr:last-child td { border-bottom: 0; }
+
+/* rules */
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.rule { padding: 18px 0; border-top: 2px solid var(--ink); display: grid; gap: 6px; align-content: start; }
+.rule b { font-family: var(--display); font-size: 21px; font-weight: 600; }
+.rule span { color: var(--muted); font-size: 15.5px; }
+
+/* close */
+.close { background: var(--ink); color: var(--paper); border-radius: 18px; padding: 36px 28px; display: grid; gap: 18px; }
+.close h2 { color: var(--paper); }
+.close ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; font-size: 18px; }
+.close .mono { color: color-mix(in srgb, var(--paper) 65%, transparent); }
+details { border-top: 1px solid var(--line); padding: 14px 0; }
+summary { cursor: pointer; font-family: var(--mono); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+details ul { margin: 12px 0 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14.5px; color: var(--muted); }
+footer { padding: 32px 0 56px; font-size: 14px; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Green Point<small>nombre de trabajo</small></div>
+    <nav aria-label="Secciones">
+      <a href="#idea">La idea</a>
+      <a href="#mercado">Mercado</a>
+      <a href="#juntos">Cómo trabajamos</a>
+      <a href="#canales">Canales</a>
+      <a href="#piso">Su mínimo</a>
+      <a href="#reglas">Reglas</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<div class="hero">
+  <p class="mono">Propuesta para la asociación de productores · Ceferino Bongiorno, Tu Vida S.R.L.</p>
+  <h1>Crecemos <em>juntos.</em></h1>
+  <p class="lead">Una marca de frutas y verduras agroecológicas de La Plata, armada con ustedes. La asociación de productores produce. Nosotros nos ocupamos de la marca, la venta, la llegada a los comercios y la logística. Las ganancias se comparten.</p>
+  <p class="ask">Antes de hablar de números queremos escucharlos: ¿cuánto quieren que les quede, como mínimo, por esta asociación?</p>
+  <div class="notice" role="note">
+    <span class="mono">Reserva mutua</span>
+    <p>Esta propuesta es el comienzo de una conversación, no un contrato. Les pedimos reserva sobre lo que leen acá mientras lo charlamos, y nos comprometemos a lo mismo: lo que ustedes nos cuenten sobre sus tierras, su producción y sus números no se comparte con terceros sin su permiso.</p>
+  </div>
+</div>
+
+<section id="idea">
+  <div class="sec-head">
+    <p class="mono">01 · La idea</p>
+    <h2>Una marca propia para lo que ustedes ya hacen bien</h2>
+    <p class="lead">Queremos una marca cercana y equilibrada, distinta a la verdulería tradicional, que ponga la fruta y la verdura agroecológica al alcance de más gente. Con vocación nacional, empezando por La Plata, City Bell, Gonnet, Villa Elisa, Ensenada y Berisso.</p>
+  </div>
+  <div class="roles">
+    <div class="role">
+      <h3>Por producto, no por bolsón</h3>
+      <p>Vamos a vender una propuesta más cuidada: selección pareja, buena presentación y el nombre de la familia a la vista. El bolsón queda para el producto más maduro o más chico, que también tiene su lugar y su precio acordado de antemano.</p>
+    </div>
+    <div class="role">
+      <h3>Con la cara de cada finca</h3>
+      <p>Cada producto cuenta quién lo cultivó y dónde. El uso del nombre y la imagen de sus fincas se acuerda por escrito con la asociación antes de mostrarlos.</p>
+    </div>
+    <div class="role">
+      <h3>Dicho con precisión</h3>
+      <p>Comunicamos "agroecológico". La palabra "orgánico" está regulada en Argentina y queda para lo que cuente con certificación.</p>
+    </div>
+  </div>
+</section>
+
+<section id="mercado">
+  <div class="sec-head">
+    <p class="mono">02 · Por qué ahora</p>
+    <h2>El mundo ya lo compra; acá el valor se queda en el medio</h2>
+    <p class="lead">Datos públicos que sostienen la idea. Toquen una barra para ver el detalle.</p>
+  </div>
+
+  <div class="chart" id="c-us">
+    <div>
+      <p class="mono">Estados Unidos, 2025</p>
+      <h3>La fruta y la verdura frescas son lo que más se vende en orgánico</h3>
+    </div>
+    <div class="bars" role="list"></div>
+    <p class="readout" aria-live="polite"></p>
+    <p class="src">Ventas en US$ miles de millones. Fuente: Organic Trade Association.</p>
+  </div>
+
+  <div class="chart" id="c-cepa">
+    <div>
+      <p class="mono">Argentina, enero de 2026</p>
+      <h3>Cuántas veces cuesta en el supermercado lo que en el Mercado Central</h3>
+    </div>
+    <div class="bars" role="list"></div>
+    <p class="readout" aria-live="polite"></p>
+    <p class="src">La línea marca 1×, el precio del Mercado Central de Buenos Aires. Fuente: <a href="https://infoecos.com.ar/wp-content/uploads/2026/02/2026.02.06_Observatorio_Frutas_y_Verduras_CEPA_enero26.pdf">CEPA, Observatorio de Frutas y Verduras</a>. El Mercado Central es mayorista, no precio de chacra.</p>
+  </div>
+
+  <div class="chart" id="c-came">
+    <div>
+      <p class="mono">Argentina, alimentos en general</p>
+      <h3>De cada $100 que paga el cliente, esto llega al productor</h3>
+    </div>
+    <div class="toggle" role="group" aria-label="Período">
+      <button type="button" data-v="22" aria-pressed="true">Septiembre 2025</button>
+      <button type="button" data-v="25.4" aria-pressed="false">Febrero 2026</button>
+    </div>
+    <div class="hund" aria-hidden="true"><div class="p"></div><div class="r">Todo lo demás que se suma en la cadena</div></div>
+    <p class="readout" aria-live="polite"></p>
+    <p class="src">Fuente: Indicador de Precios en Origen y Destino de CAME (<a href="https://www.redcame.org.ar/advf/documentos/2025/10/68f7bf92d1662.pdf">informe de septiembre</a>, <a href="https://mzagro.com.ar/ipod-came-febrero-2026-brecha-productor-consumidor/">febrero</a>). Son promedios nacionales; no hablan de ningún productor en particular.</p>
+  </div>
+
+  <div class="tiles">
+    <div class="tile">
+      <span class="mono">Argentina, 2025</span>
+      <div class="n">98<small>%</small></div>
+      <p>del volumen orgánico certificado se exporta. Solo 1,5% llega al consumo local (MAGyP y SENASA).</p>
+    </div>
+    <div class="tile">
+      <span class="mono">UTT, 2024</span>
+      <div class="n">8.000</div>
+      <p>bolsones por semana en unos 300 nodos de entrega, según <a href="https://www.baenegocios.com/negocios/ahorro-la-compra-comunitaria-de-bolsones-de-fruta-y-verdura-se-puso-de-moda-20240606-0092.html">Buenos Aires Negocios</a>.</p>
+    </div>
+    <div class="tile">
+      <span class="mono">Bolsón Soberano, 2020</span>
+      <div class="n">900<small>+ por mes</small></div>
+      <p>el doble que antes, y los productores recibían cerca del 59% del precio final (<a href="https://bichosdecampo.com/en-los-meses-de-pandemia-la-facultad-de-agronomia-de-la-uba-duplico-las-ventas-de-su-bolson-soberano">Bichos de Campo</a>).</p>
+    </div>
+  </div>
+</section>
+
+<section id="juntos">
+  <div class="sec-head">
+    <p class="mono">03 · Cómo trabajamos juntos</p>
+    <h2>Tareas distintas, sociedad igualitaria</h2>
+    <p class="lead">Es un acuerdo de empresa a empresa entre la asociación de productores y Tu Vida S.R.L. Ustedes se ocupan de producir. Tu Vida se ocupa de todo lo demás, incluida la llegada a los comercios y la logística: no necesitan transporte propio.</p>
+  </div>
+  <div class="roles">
+    <div class="role">
+      <span class="mono">La asociación de productores</span>
+      <h3>Producir y definir su mínimo</h3>
+      <ul>
+        <li>Cultivar, cosechar y clasificar.</li>
+        <li>Proponer el calendario de siembra.</li>
+        <li>Decirnos cuánto necesitan que les quede.</li>
+        <li>Designar a quien organice y los represente: presidente, coordinador o quien elijan.</li>
+      </ul>
+    </div>
+    <div class="role tv">
+      <span class="mono">Tu Vida S.R.L.</span>
+      <h3>Todo lo demás</h3>
+      <ul>
+        <li>Marca, diseño y presentación.</li>
+        <li>Tienda online, redes y atención al cliente.</li>
+        <li>Llegada a los comercios y ventas.</li>
+        <li>Logística: retiro en la finca, acopio y reparto.</li>
+        <li>Cobranza y cuentas abiertas para ambas partes.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="callout">Tu Vida S.R.L., de la que Ceferino Bongiorno es dueño y socio mayorista, es una distribuidora mayorista de alimentos naturales, orgánicos y dietéticos de La Plata, con logística propia. La marca nueva es independiente, y se apoya en esa estructura.</p>
+
+  <p class="mono" style="margin: 36px 0 12px">El recorrido de un cajón</p>
+  <div class="path">
+    <div class="node"><span class="mono">Productores</span><b>La finca</b><span>Cosecha y clasifica.</span></div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="node you"><span class="mono">Tu Vida</span><b>Retiro y acopio</b><span>Pasamos a buscarlo.</span></div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="node you"><span class="mono">Tu Vida</span><b>Canales</b><ul><li>Verdulerías</li><li>Dietéticas y tiendas naturales</li><li>Autoservicios y supermercados</li><li>Restaurantes y comedores</li><li>Tienda online y apps</li></ul></div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="node"><span class="mono">Cliente</span><b>La mesa</b><span>Hogar o negocio.</span></div>
+  </div>
+  <p class="back">Lo que se vende cada semana vuelve a los productores como información para planificar la siembra.</p>
+</section>
+
+<section id="canales">
+  <div class="sec-head">
+    <p class="mono">04 · Llegada a los comercios</p>
+    <h2>Cada canal compra distinto, así que cada uno recibe un formato distinto</h2>
+    <p class="lead">En Estados Unidos las cadenas tienen góndolas abiertas con frío y el cliente toma producto envasado. Acá esas góndolas no existen, y en las verdulerías el cliente elige de cajones. Por eso lo nuestro se adapta al mueble y a la costumbre de cada lugar.</p>
+  </div>
+  <div class="tabs" role="tablist" aria-label="Canales"></div>
+  <div class="panel" id="panel" role="tabpanel"></div>
+  <p class="src" style="margin-top:12px">Primera propuesta. La afinamos con ustedes y visitando locales de La Plata.</p>
+</section>
+
+<section id="piso">
+  <div class="sec-head">
+    <p class="mono">05 · El mínimo</p>
+    <h2>Construimos el número juntos</h2>
+    <p class="lead">Les pedimos que nos digan cuánto necesitan que les quede: es el punto de partida. Lo ponemos junto a sus costos y a los precios del mercado y lo ajustamos entre todos, para que el precio final siga siendo atractivo para el cliente y el proyecto crezca para ambos. Cinco pasos, toquen cada uno.</p>
+  </div>
+  <div class="steps" id="steps"></div>
+  <p class="mono" style="margin: 30px 0 4px">Planilla de la primera charla, para completar entre todos</p>
+  <div class="sheet">
+    <table>
+      <thead><tr>
+        <th>Producto</th><th>Precio en su puesto ($/kg)</th><th>Kilos por semana</th><th>Costo de producirlo ($/kg)</th><th>Pérdida (%)</th><th>Mínimo, primera selección ($/kg)</th><th>Mínimo, segunda selección ($/kg)</th><th>Meses de cosecha</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src" style="margin-top:10px">Se completa por producto y por temporada. Segunda selección: lo que va al bolsón u otra venta aparte, con un mínimo propio.</p>
+</section>
+
+<section id="reglas">
+  <div class="sec-head">
+    <p class="mono">06 · Reglas de juego</p>
+    <h2>Lo que nos comprometemos a respetar</h2>
+  </div>
+  <div class="rules">
+    <div class="rule"><b>Cuentas abiertas</b><span>Costos, ventas y gastos visibles para ambas partes, y revisados cada tres meses.</span></div>
+    <div class="rule"><b>Un solo interlocutor</b><span>La asociación designa a quien organice y la represente, y con esa persona acordamos todo. Cómo se organizan y reparten adentro es asunto de ustedes.</span></div>
+    <div class="rule"><b>Precios competitivos</b><span>Cada mínimo se contrasta con costos reales y con el mercado, para que el precio final sea atractivo y la venta crezca para todos.</span></div>
+    <div class="rule"><b>Ganancias compartidas</b><span>Cómo se reparten lo definimos juntos, con los números de ustedes sobre la mesa y sin compromiso previo.</span></div>
+    <div class="rule"><b>Nada obligatorio al empezar</b><span>Lo primero es una carta de intención sin obligaciones. Un acuerdo más formal viene después, cuando todos lo vean claro.</span></div>
+    <div class="rule"><b>Su imagen, con su permiso</b><span>El nombre, las fotos y las redes de sus fincas se usan solo con un acuerdo escrito con la asociación.</span></div>
+    <div class="rule"><b>Crecer de a poco</b><span>Empezamos con los productos que cierran y sumamos a medida que la venta se sostiene.</span></div>
+  </div>
+</section>
+
+<section id="siguiente">
+  <div class="close">
+    <p class="mono">07 · Lo que sigue</p>
+    <h2>Por ahora les pedimos tres cosas</h2>
+    <ol>
+      <li>Leer esta propuesta con calma y anotar dudas.</li>
+      <li>Pensar la pregunta: ¿cuánto quieren que les quede, como mínimo?</li>
+      <li>Elegir un día para charlar en persona.</li>
+    </ol>
+    <div>
+      <span class="mono">Quién les propone esto</span>
+      <p style="margin-top:6px"><b>Ceferino Bongiorno</b>, dueño y socio mayorista de Tu Vida S.R.L.</p>
+      <p style="margin-top:6px">Teléfono y WhatsApp: <a href="tel:+17282057857" style="color:var(--paper)">+1 (728) 205-7857</a><br>Correo: <a href="mailto:avisos@tuvida.com.ar" style="color:var(--paper)">avisos@tuvida.com.ar</a><br>Web: <a href="https://tuvida.com.ar" style="color:var(--paper)">tuvida.com.ar</a></p>
+    </div>
+  </div>
+  <details>
+    <summary>Fuentes</summary>
+    <ul>
+      <li>Organic Trade Association, ventas de alimentos orgánicos en EE.UU., 2025.</li>
+      <li>CEPA, Observatorio de Frutas y Verduras, enero de 2026.</li>
+      <li>CAME, Indicador de Precios en Origen y Destino, septiembre de 2025 y febrero de 2026.</li>
+      <li>MAGyP y SENASA, comercialización de productos orgánicos, 2025.</li>
+      <li>Buenos Aires Negocios, compra comunitaria de bolsones, junio de 2024.</li>
+      <li>Bichos de Campo, Bolsón Soberano de la FAUBA, 2020.</li>
+    </ul>
+  </details>
+</section>
+
+</div>
+</main>
+<footer><div class="wrap">Documento de trabajo. Green Point es un nombre provisorio. Las cifras citadas son de fuentes públicas; las del proyecto se arman con la asociación.</div></footer>
+
+<script>
+(function () {
+  var fmt = function (n, d) { return n.toLocaleString('es-AR', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); };
+
+  function barChart(id, rows, max, opts) {
+    var root = document.getElementById(id);
+    var box = root.querySelector('.bars');
+    var out = root.querySelector('.readout');
+    var els = [];
+    rows.forEach(function (r, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'bar' + (r.hot ? ' hot' : '');
+      b.setAttribute('role', 'listitem');
+      b.innerHTML = '<span class="lbl"></span><span class="track"><span class="fill" style="width:0"></span><span class="val"></span></span>';
+      b.querySelector('.lbl').textContent = r.label;
+      b.querySelector('.val').textContent = r.text;
+      if (opts && opts.baseline) {
+        var l = document.createElement('span'); l.className = 'baseline'; l.style.left = (opts.baseline / max * 100) + '%';
+        b.querySelector('.track').appendChild(l);
+      }
+      function sel() { els.forEach(function (e) { e.classList.remove('sel'); }); b.classList.add('sel'); out.textContent = r.note; }
+      b.addEventListener('click', sel); b.addEventListener('mouseenter', sel); b.addEventListener('focus', sel);
+      box.appendChild(b); els.push(b);
+      requestAnimationFrame(function () { setTimeout(function () { b.querySelector('.fill').style.width = (r.v / max * 100) + '%'; }, 60 + i * 60); });
+    });
+    var start = rows.findIndex(function (r) { return r.hot; });
+    out.textContent = rows[start < 0 ? 0 : start].note;
+    els[start < 0 ? 0 : start].classList.add('sel');
+  }
+
+  barChart('c-us', [
+    { label: 'Frutas y verduras frescas', v: 22.7, text: '22,7', hot: true, note: 'Frutas y verduras frescas: US$ 22,7 mil millones, cerca del 30% de los US$ 76,6 mil millones que se vendieron en total.' },
+    { label: 'Alimentos envasados', v: 15.7, text: '15,7', note: 'Alimentos envasados: US$ 15,7 mil millones.' },
+    { label: 'Bebidas', v: 10.2, text: '10,2', note: 'Bebidas: US$ 10,2 mil millones.' },
+    { label: 'Lácteos y huevos', v: 9.6, text: '9,6', note: 'Lácteos y huevos: US$ 9,6 mil millones.' },
+    { label: 'Textiles', v: 2.7, text: '2,7', note: 'Textiles: US$ 2,7 mil millones.' },
+    { label: 'Suplementos', v: 2.4, text: '2,4', note: 'Suplementos: US$ 2,4 mil millones.' },
+    { label: 'Cuidado personal', v: 1.4, text: '1,4', note: 'Cuidado personal: US$ 1,4 mil millones.' }
+  ], 25);
+
+  barChart('c-cepa', [
+    { label: 'Lechuga', v: 2.4, text: '2,4×', hot: true, note: 'Lechuga: en el supermercado cuesta 2,4 veces lo que en el Mercado Central.' },
+    { label: 'Papa', v: 2.2, text: '2,2×', note: 'Papa: 2,2 veces.' },
+    { label: 'Tomate', v: 1.6, text: '1,6×', note: 'Tomate: 1,6 veces.' }
+  ], 2.6, { baseline: 1 });
+  document.querySelector('#c-cepa .readout').textContent = 'Lechuga: en el supermercado cuesta 2,4 veces lo que en el Mercado Central. En conjunto, la hortaliza costaba 88,6% más en enero de 2026.';
+
+  // share bar
+  (function () {
+    var root = document.getElementById('c-came');
+    var p = root.querySelector('.p'), out = root.querySelector('.readout');
+    var btns = root.querySelectorAll('.toggle button');
+    function set(v) {
+      p.style.width = v + '%'; p.textContent = '$' + fmt(+v, v % 1 ? 1 : 0);
+      out.textContent = 'De cada $100 que paga el cliente, al productor le llegan $' + fmt(+v, v % 1 ? 1 : 0) + ' en promedio. El resto se reparte entre transporte, empaque, mayorista y comercio.';
+    }
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        set(b.getAttribute('data-v'));
+      });
+    });
+    p.style.width = '0%';
+    setTimeout(function () { set('22'); }, 200);
+  })();
+
+  // channels
+  var ch = [
+    { n: 'Verdulerías', a: 'Se vende a granel, en cajones; el cliente elige y se pesa en el momento.', b: 'Un cajón propio, rotulado y separado del convencional, en el frente del local, con cartel de la familia, código QR a la finca y precio por kilo.', c: 'Es el formato que el cliente ya conoce. Un envase cerrado le quita el hábito de elegir lo que se lleva.' },
+    { n: 'Dietéticas y tiendas naturales', a: 'Producto envasado, mostrador y heladeras chicas. El cliente ya busca lo natural.', b: 'Bandejas o bolsas selladas de peso fijo, con ficha de la finca, en una heladera o exhibidor junto a la caja. Entrega dos veces por semana.', c: 'Hay poco espacio y no hay balanza para fresco. A la vista y junto a la caja, el producto se vende solo.' },
+    { n: 'Autoservicios y supermercados', a: 'Verdulería interna a granel o bandejas con balanza, y caja con código de barras.', b: 'Cajonera o islote de marca en la sección de frutas y verduras, y paquetes de peso fijo con código de barras. Empezamos por autoservicios independientes, donde decide el dueño.', c: 'El islote da visibilidad sin necesitar frío, y el código de barras evita el pesaje en caja.' },
+    { n: 'Restaurantes y comedores', a: 'Compran por pedido, sin exhibición.', b: 'Cajón de 5 a 10 kg por producto, con entrega fija y el nombre de la finca en la carta.', c: 'Buscan regularidad, calidad y saber de dónde viene lo que sirven.' },
+    { n: 'Tienda online y apps', a: 'El cliente compra por foto y confianza, sin ver el producto.', b: 'Ficha de marca con foto de la finca, packs de peso fijo y una selección semanal que el cliente confirma. Las apps de delivery sirven de vidriera.', c: 'La confianza se construye mostrando quién produce. Con una selección semanal, las familias también saben qué sembrar.' }
+  ];
+  var tabs = document.querySelector('.tabs'), panel = document.getElementById('panel');
+  function show(i) {
+    Array.prototype.forEach.call(tabs.children, function (t, j) { t.setAttribute('aria-selected', j === i ? 'true' : 'false'); });
+    var c = ch[i];
+    panel.innerHTML = '<div><span class="mono">Cómo se vende hoy</span><p></p></div><div><span class="mono">Cómo lo presentamos</span><p></p></div><div><span class="mono">Por qué así</span><p></p></div>';
+    var ps = panel.querySelectorAll('p'); ps[0].textContent = c.a; ps[1].textContent = c.b; ps[2].textContent = c.c;
+  }
+  ch.forEach(function (c, i) {
+    var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.textContent = c.n;
+    b.addEventListener('click', function () { show(i); }); tabs.appendChild(b);
+  });
+  show(0);
+
+  // steps
+  var st = [
+    ['Una charla, sin números nuestros', ['Con quien la asociación elija como referente, nos cuentan cómo venden hoy en sus puestos de 520 y 116 y en el Mercado Central: a qué precio por kilo, cuánto por semana, qué se pierde y cuánto cuesta producir.']],
+    ['La pregunta', ['¿Cuánto quieren que les quede, como mínimo, por esta asociación? No hace falta responder en el momento: piénsenlo con calma.', 'El mínimo es lo que les queda por kilo, puesto en la finca, cosechado y clasificado. Nosotros retiramos y llevamos.']],
+    ['Volvemos con los datos', ['Les llevamos todo ordenado: qué vamos a hacer, cómo, por qué, dónde y qué ganancias tendrían, producto por producto.']],
+    ['Ajustamos juntos', ['Ponemos cada mínimo al lado de sus costos y de los precios de venta posibles. Si un producto queda demasiado caro para el cliente, buscamos juntos cómo bajar costos o ajustar el piso, y empezamos por los que cierran.', 'Pedimos dos mínimos: uno para la primera selección y otro para la segunda, la que va al bolsón.']],
+    ['Lo dejamos por escrito', ['Una carta de intención sin obligaciones, con el piso de cada producto y una revisión cada tres meses con las cuentas a la vista.']]
+  ];
+  var sc = document.getElementById('steps');
+  st.forEach(function (s, i) {
+    var d = document.createElement('div'); d.className = 'step'; d.setAttribute('data-open', i === 1 ? 'true' : 'false');
+    d.innerHTML = '<button type="button" aria-expanded="' + (i === 1) + '"><span class="no">0' + (i + 1) + '</span><span class="t"></span><span class="chev" aria-hidden="true">›</span></button><div class="body"></div>';
+    d.querySelector('.t').textContent = s[0];
+    var body = d.querySelector('.body');
+    s[1].forEach(function (t) { var p = document.createElement('p'); p.textContent = t; body.appendChild(p); });
+    d.querySelector('button').addEventListener('click', function () {
+      var o = d.getAttribute('data-open') !== 'true'; d.setAttribute('data-open', o); this.setAttribute('aria-expanded', o);
+    });
+    sc.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>
