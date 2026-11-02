@@ -1,525 +1,242 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es-AR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Propuesta Green Point</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
-<style>
-/* Layout idea: a field ledger. Long editorial column, mono labels for units and sources, one harvest-gold accent reserved for the figure that matters in each chart. */
-:root {
-  --paper: #F5F6F0;
-  --card: #FFFFFF;
-  --ink: #102A21;
-  --muted: #4F625A;
-  --leaf: #2E7D4F;
-  --leaf-soft: #DCEBDD;
-  --harvest: #B87A0C;
-  --line: #D3DBCF;
-  --display: "Newsreader", Georgia, "Times New Roman", serif;
-  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #0D1D17; --card: #14291F; --ink: #EAF1EA; --muted: #A5B8AE;
-    --leaf: #5BBE83; --leaf-soft: #1C3A2C; --harvest: #E5B24A; --line: #28453A;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #0D1D17; --card: #14291F; --ink: #EAF1EA; --muted: #A5B8AE;
-  --leaf: #5BBE83; --leaf-soft: #1C3A2C; --harvest: #E5B24A; --line: #28453A;
-  color-scheme: dark;
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0; background: var(--paper); color: var(--ink);
-  font-family: var(--body); font-size: 17px; line-height: 1.6;
-}
-a { color: var(--leaf); }
-:focus-visible { outline: 3px solid var(--harvest); outline-offset: 3px; border-radius: 4px; }
-.wrap { width: 100%; max-width: 980px; margin: 0 auto; padding: 0 20px; }
-.mono { font-family: var(--mono); font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
-h1, h2, h3 { font-family: var(--display); font-weight: 500; line-height: 1.12; margin: 0; text-wrap: balance; }
-h2 { font-size: clamp(30px, 5vw, 46px); }
-h3 { font-size: 24px; }
-p { margin: 0; }
-.lead { font-size: 19px; color: var(--muted); max-width: 62ch; }
-
-/* top bar */
-.top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 12px; padding-bottom: 12px; }
-.brand { font-family: var(--display); font-size: 20px; font-weight: 600; }
-.brand small { font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin-left: 8px; }
-.top nav { display: flex; gap: 18px; font-size: 14px; }
-.top nav a { color: var(--muted); text-decoration: none; }
-.top nav a:hover { color: var(--ink); }
-@media (max-width: 760px) { .top nav { display: none; } .brand small { display: none; } }
-
-/* hero */
-.hero { padding: 64px 0 40px; }
-.hero h1 { font-size: clamp(54px, 12vw, 128px); letter-spacing: -.02em; margin: 14px 0 22px; }
-.hero h1 em { font-style: italic; color: var(--leaf); }
-.hero .ask { margin-top: 30px; padding: 20px 22px; border-left: 4px solid var(--harvest); background: var(--card); border-radius: 0 10px 10px 0; font-family: var(--display); font-size: 24px; line-height: 1.3; max-width: 640px; }
-
-/* confidentiality */
-.notice { margin: 28px 0 0; padding: 18px 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); display: grid; gap: 6px; }
-.notice p { font-size: 15px; color: var(--muted); }
-
-section { padding: 56px 0; border-top: 1px solid var(--line); }
-.sec-head { display: grid; gap: 12px; margin-bottom: 28px; }
-
-/* path diagram */
-.path { display: grid; grid-template-columns: 1fr auto 1fr auto 1.3fr auto 1fr; align-items: stretch; gap: 10px; margin: 8px 0 0; }
-.node { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 6px; align-content: start; }
-.node.you { border-color: var(--leaf); background: var(--leaf-soft); }
-.node b { font-family: var(--display); font-size: 21px; font-weight: 600; line-height: 1.15; }
-.node span { font-size: 14.5px; color: var(--muted); }
-.node ul { margin: 4px 0 0; padding-left: 18px; font-size: 14.5px; color: var(--muted); }
-.arrow { align-self: center; color: var(--leaf); font-family: var(--mono); font-size: 20px; }
-.back { margin-top: 12px; font-size: 14.5px; color: var(--muted); display: flex; gap: 10px; align-items: baseline; }
-.back::before { content: "↺"; color: var(--harvest); font-size: 18px; }
-@media (max-width: 860px) {
-  .path { grid-template-columns: 1fr; }
-  .arrow { transform: rotate(90deg); justify-self: center; }
-}
-
-/* charts */
-.chart { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: grid; gap: 14px; }
-.chart + .chart { margin-top: 18px; }
-.chart h3 { font-size: 22px; }
-.bars { display: grid; gap: 10px; }
-.bar { display: grid; grid-template-columns: minmax(96px, 170px) 1fr; align-items: center; gap: 12px; background: none; border: 0; padding: 4px 0; text-align: left; font: inherit; color: inherit; cursor: pointer; border-radius: 6px; }
-.bar .lbl { font-size: 14.5px; line-height: 1.25; }
-.track { position: relative; height: 26px; background: color-mix(in srgb, var(--leaf-soft) 70%, transparent); border-radius: 4px; }
-.fill { position: absolute; inset: 0 auto 0 0; background: var(--leaf); border-radius: 4px; transition: width .7s cubic-bezier(.2,.7,.2,1); }
-.bar.hot .fill { background: var(--harvest); }
-.bar .val { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
-.bar:hover .track, .bar.sel .track { outline: 2px solid var(--line); }
-.baseline { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); opacity: .55; }
-.readout { min-height: 3.2em; font-size: 15.5px; border-top: 1px dashed var(--line); padding-top: 12px; }
-.src { font-size: 12.5px; color: var(--muted); font-family: var(--mono); }
-.src a { color: var(--muted); }
-
-.toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 3px; width: fit-content; }
-.toggle button { border: 0; background: none; color: var(--muted); font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 999px; cursor: pointer; }
-.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-.hund { display: flex; height: 54px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
-.hund .p { background: var(--harvest); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 14px; transition: width .6s cubic-bezier(.2,.7,.2,1); min-width: 52px; }
-.hund .r { flex: 1; background: color-mix(in srgb, var(--leaf-soft) 80%, transparent); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--muted); text-align: center; padding: 0 8px; }
-[data-theme="dark"] .hund .p { color: #1a1204; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hund .p { color: #1a1204; } }
-
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 18px; }
-.tile { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 6px; align-content: start; }
-.tile .n { font-family: var(--display); font-size: 44px; line-height: 1; font-weight: 500; }
-.tile .n small { font-size: 18px; color: var(--muted); }
-.tile p { font-size: 14.5px; color: var(--muted); }
-
-/* roles */
-.roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-.role { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: grid; gap: 10px; align-content: start; }
-.role.tv { border-color: var(--leaf); }
-.role ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
-.callout { margin-top: 18px; padding: 18px 20px; border-radius: 12px; background: var(--leaf-soft); font-size: 17px; }
-
-/* tabs */
-.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-.tabs button { border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-size: 15px; padding: 10px 16px; border-radius: 999px; cursor: pointer; }
-.tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-.panel div { display: grid; gap: 6px; align-content: start; }
-.panel .mono { color: var(--leaf); }
-
-/* steps */
-.steps { display: grid; gap: 10px; counter-reset: s; }
-.step { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-.step button { width: 100%; display: grid; grid-template-columns: 44px 1fr 24px; align-items: center; gap: 12px; text-align: left; background: none; border: 0; padding: 16px 18px; font: inherit; color: inherit; cursor: pointer; }
-.step .no { font-family: var(--mono); font-size: 15px; color: var(--harvest); }
-.step .t { font-family: var(--display); font-size: 22px; font-weight: 500; }
-.step .chev { color: var(--muted); transition: transform .2s; }
-.step[data-open="true"] .chev { transform: rotate(90deg); }
-.step .body { display: none; padding: 0 18px 18px 74px; color: var(--muted); }
-.step[data-open="true"] .body { display: block; }
-.step .body p + p { margin-top: 10px; }
-@media (max-width: 520px) { .step .body { padding-left: 18px; } }
-.sheet { overflow-x: auto; margin-top: 22px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
-.sheet table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
-.sheet th, .sheet td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: bottom; }
-.sheet th { font-family: var(--mono); font-size: 11.5px; font-weight: 500; letter-spacing: .03em; text-transform: uppercase; color: var(--muted); }
-.sheet td.blank { height: 40px; }
-.sheet tr:last-child td { border-bottom: 0; }
-
-/* rules */
-.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-.rule { padding: 18px 0; border-top: 2px solid var(--ink); display: grid; gap: 6px; align-content: start; }
-.rule b { font-family: var(--display); font-size: 21px; font-weight: 600; }
-.rule span { color: var(--muted); font-size: 15.5px; }
-
-/* close */
-.close { background: var(--ink); color: var(--paper); border-radius: 18px; padding: 36px 28px; display: grid; gap: 18px; }
-.close h2 { color: var(--paper); }
-.close ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; font-size: 18px; }
-.close .mono { color: color-mix(in srgb, var(--paper) 65%, transparent); }
-details { border-top: 1px solid var(--line); padding: 14px 0; }
-summary { cursor: pointer; font-family: var(--mono); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
-details ul { margin: 12px 0 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14.5px; color: var(--muted); }
-footer { padding: 32px 0 56px; font-size: 14px; color: var(--muted); }
-
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#203c2e">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Una propuesta de Tu Vida para Delina y las familias de Cotepo: desarrollar juntos una marca agroecológica, con una primera prueba y condiciones acordadas.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:title" content="Green Point · Una propuesta para crecer juntos">
+  <meta property="og:description" content="Para Delina y las familias de Cotepo. Conversemos sobre un nuevo canal de venta, precios acordados y una primera prueba conjunta.">
+  <meta name="twitter:card" content="summary">
+  <title>Green Point · Propuesta para Delina y las familias de Cotepo</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23203c2e'/%3E%3Ctext x='32' y='45' font-size='43' font-family='Georgia' text-anchor='middle' fill='%23f7f4ec'%3Eg%3C/text%3E%3Ccircle cx='48' cy='17' r='5' fill='%23dfc16e'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <style>
+    :root{--paper:#f7f4ec;--white:#fffdf8;--ink:#203c2e;--muted:#536357;--line:#d4d9c9;--soft:#e8ecdf;--gold:#dfc16e;--dark:#182e24;--serif:"Newsreader",Georgia,"Times New Roman",serif;--sans:"Instrument Sans",Arial,sans-serif;--radius:18px;--gutter:clamp(20px,5vw,72px)}
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:100px}
+    body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-underline-offset:4px}button,input,textarea,select{font:inherit}button,a,input,textarea,select,summary{-webkit-tap-highlight-color:transparent}
+    button,summary{cursor:pointer}button:disabled{cursor:default}button{color:inherit}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #967011;outline-offset:5px}
+    h1,h2,h3,p,figure{margin:0}h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.08}h2{font-size:clamp(36px,5vw,62px);letter-spacing:-.025em}h3{font-size:27px}h1 em,h2 em{font-weight:400}p+p{margin-top:14px}ul,ol{padding-left:22px}svg{display:block;max-width:100%}a,button,input,textarea,select{touch-action:manipulation}
+    [hidden]{display:none!important}.wrap{width:min(1264px,100%);margin-inline:auto;padding-inline:var(--gutter)}.eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;line-height:1.5}.dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}.muted{color:var(--muted)}.intro{font-size:18px;line-height:1.7;color:var(--muted);max-width:65ch}.fine{font-size:13px;color:var(--muted)}.section{padding-block:90px;border-top:1px solid var(--line)}.section-head{display:grid;grid-template-columns:190px 1fr;gap:28px;margin-bottom:44px}.section-head .eyebrow{align-self:start;padding-top:9px}.section-head h2{max-width:19ch}.section-head .intro{margin-top:20px}.button{display:inline-flex;justify-content:center;align-items:center;gap:16px;min-height:48px;padding:13px 22px;border:1px solid var(--ink);border-radius:7px;text-decoration:none;font:500 14px/1.35 var(--sans);background:var(--ink);color:var(--white);transition:background .16s,transform .16s}.button:hover{background:#305641;transform:translateY(-1px)}.button.secondary{background:transparent;color:var(--ink);border-color:#a4af9c}.button.secondary:hover{background:var(--soft)}.button.gold{background:var(--gold);border-color:var(--gold);color:var(--dark)}.button.gold:hover{background:#ebcf83}.button.small{padding:10px 15px;min-height:42px;font-size:13px}.button svg{width:17px;height:17px}.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.text-link{font-size:14px;font-weight:600;text-decoration-thickness:1px}.skip{position:absolute;left:20px;top:-100px;padding:12px 18px;background:var(--ink);color:white;z-index:100}.skip:focus{top:12px}
+    .top{position:sticky;top:0;z-index:20;background:rgba(247,244,236,.97);border-bottom:1px solid var(--line)}.top-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:82px}.identity{text-decoration:none;display:flex;align-items:center;gap:11px;flex:none}.brand-mark{font:500 30px/.9 var(--serif);letter-spacing:-1.5px}.brand-mark span{display:inline-block;width:7px;height:7px;margin-left:2px;border-radius:50%;background:#a07818}.brand-sub{border-left:1px solid #b9c1af;padding-left:12px;font-size:10px;line-height:1.5;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.desktop-nav{display:flex;align-items:center;gap:23px;font-size:12px}.desktop-nav a{text-decoration:none}.desktop-nav a:hover{text-decoration:underline}.mobile-menu{display:none}.progress{position:absolute;bottom:-1px;left:0;width:0;height:2px;background:#a07818}
+    .hero{padding-block:62px 70px}.hero-meta{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:19px}.hero-meta .edition{font-size:11px;letter-spacing:.05em;color:var(--muted)}.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:65px;align-items:center;padding-top:50px}.hero h1{font-size:clamp(64px,7.8vw,108px);letter-spacing:-.055em;line-height:.98;max-width:10ch}.hero h1 em{display:block;color:#4a6745}.hero .intro{margin-top:26px;max-width:49ch;font-size:18px}.hero .actions{margin-top:30px}.hero-note{margin-top:16px;font-size:12px;color:var(--muted)}.hero-aside{padding:28px;background:var(--soft);border-radius:160px 160px 14px 14px;position:relative;isolation:isolate}.hero-aside .stamp{position:absolute;top:13px;right:-12px;border-radius:50%;width:85px;height:85px;background:var(--gold);display:grid;place-content:center;text-align:center;font-size:10px;line-height:1.5;font-weight:600;letter-spacing:.06em;transform:rotate(9deg);z-index:1}.produce-art{height:260px;display:flex;align-items:center;justify-content:center}.origin-label{background:var(--white);padding:23px 24px 19px;border:1px solid #cbd1bc;border-radius:8px;box-shadow:0 10px 24px #203c2e08}.origin-label .label-top{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px}.label-product{font:400 31px/1.15 var(--serif);margin-top:15px}.origin-label p{font-size:12px;line-height:1.6}.origin-label .label-bottom{display:flex;justify-content:space-between;gap:12px;margin-top:15px;font-size:10px;letter-spacing:.07em;text-transform:uppercase}.aside-caption{font-size:11px;color:var(--muted);margin-top:14px;text-align:center;line-height:1.5}.hero-foot{display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:58px;border-top:1px solid var(--line)}.hero-foot div{padding:22px 26px 0 0}.hero-foot div+div{border-left:1px solid var(--line);padding-left:26px}.hero-foot strong{display:block;font:400 23px/1.2 var(--serif);margin-bottom:6px}.hero-foot p{font-size:13px;color:var(--muted)}
+    .benefits{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start}.statement{font:400 clamp(25px,3vw,36px)/1.32 var(--serif);max-width:25ch}.statement em{color:#58704c}.benefit-list{list-style:none;padding:0;margin:0}.benefit-list li{display:grid;grid-template-columns:28px 1fr;gap:15px;padding:19px 0;border-bottom:1px solid var(--line)}.benefit-list li:first-child{padding-top:0}.benefit-list .num{font-size:12px;color:#796224;padding-top:5px}.benefit-list strong{font-size:16px;font-weight:600}.benefit-list p{font-size:14px;color:var(--muted);margin-top:5px}.note-box{margin-top:30px;padding:19px 22px;border-left:3px solid #aa8329;background:#eee9d9;font-size:14px}.note-box strong{font-weight:600}
+    .roles{display:grid;grid-template-columns:1fr 1fr;background:var(--ink);color:var(--white);border-radius:var(--radius);overflow:hidden}.role{padding:39px}.role+.role{border-left:1px solid #5b715c}.roles .eyebrow{color:#c8d0bc}.roles h3{font-size:35px;margin-top:16px}.roles ul{list-style:none;padding:0;margin:24px 0 0}.roles li{padding:11px 0;border-top:1px solid #536c56;font-size:14px;color:#e0e6d8}.roles .common{grid-column:1/-1;background:#2a4937;padding:23px 39px;font-size:14px;border-top:1px solid #536c56}.common strong{color:var(--gold)}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:38px}.route-item{border-top:1px solid #9aa88e;padding:20px 24px 0 0;position:relative}.route-item::before{content:"";position:absolute;top:-5px;left:0;width:9px;height:9px;background:var(--ink);border-radius:50%}.route-item span{font-size:11px;color:var(--muted)}.route-item strong{display:block;font:400 23px/1.2 var(--serif);margin-top:8px}.route-item p{font-size:13px;color:var(--muted);margin-top:8px;max-width:23ch}
+    .money{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start}.money-ledger{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:28px}.ledger-title{font:400 27px/1.15 var(--serif);padding-bottom:20px}.ledger-line{display:flex;justify-content:space-between;gap:18px;align-items:baseline;padding:16px 0;border-top:1px solid var(--line);font-size:14px}.ledger-line span:first-child{flex:none;font-family:var(--serif);font-size:23px;color:#71602d}.ledger-line span:last-child{flex:1}.ledger-line.result{background:var(--soft);margin-inline:-13px;padding-inline:13px;border:0;border-radius:7px;font-weight:500}.money-ledger .fine{margin-top:18px}.money-explainer h3{margin-bottom:15px}.money-explainer p{font-size:15px;color:var(--muted)}.agreement-list{display:grid;gap:0;margin-top:24px}.agreement{border-top:1px solid var(--line);padding-block:15px}.agreement strong{display:block;font-size:14px}.agreement p{font-size:13px;margin-top:4px}.disclosure{margin-top:28px;border-block:1px solid var(--line)}.disclosure summary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0;list-style:none;font-size:15px;font-weight:500}.disclosure summary::-webkit-details-marker{display:none}.disclosure summary::after{content:"+";font:400 25px/1 var(--sans);flex:none}.disclosure[open]>summary::after{content:"−"}.detail-body{padding-bottom:24px;color:var(--muted);font-size:14px}.detail-body li+li{margin-top:9px}.detail-body h3{color:var(--ink);margin-block:20px 10px;font-size:25px}
+    .pilot-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:65px}.pilot-window{padding:30px;background:var(--gold);border-radius:12px;position:sticky;top:110px}.pilot-window .time{font:400 80px/1 var(--serif);letter-spacing:-.05em;margin-top:18px}.pilot-window .unit{font-size:15px}.pilot-window p{font-size:14px;margin-top:18px}.pilot-window .fine{border-top:1px solid #a88b3f;padding-top:16px;margin-top:23px;color:#3c422a}.pilot-steps{list-style:none;margin:0;padding:0;counter-reset:pilot}.pilot-steps li{position:relative;padding:0 0 28px 51px;border-left:1px solid #a8b39c;margin-left:12px;counter-increment:pilot}.pilot-steps li:last-child{border-left-color:transparent;padding-bottom:0}.pilot-steps li::before{content:counter(pilot,decimal-leading-zero);position:absolute;top:0;left:-13px;width:26px;background:var(--paper);font-size:12px;color:#77622d;line-height:28px}.pilot-steps h3{font-size:28px}.pilot-steps p{font-size:14px;color:var(--muted);margin-top:9px}.pilot-check{margin-top:35px;border-top:1px solid var(--line);padding-top:23px;font-size:14px}.metrics{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}.metrics span{border:1px solid #b7c0aa;padding:7px 12px;border-radius:5px;font-size:12px}
+    .formats{background:#e9ecdf}.formats-intro{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-bottom:30px}.formats-intro p{color:var(--muted);font-size:15px}.formats-intro h3{font-size:31px}.format-tabs{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:26px}.format-tabs button{padding:11px 18px;border:1px solid #a5b29b;background:transparent;border-radius:30px;font-size:14px;min-height:45px}.format-tabs button[aria-selected="true"]{background:var(--ink);color:var(--white);border-color:var(--ink)}.format-panel{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}.format-visual{background:#f4f3e9;border:1px solid #ccd3bf;border-radius:14px;min-height:300px;padding:25px;display:grid;place-items:center}.format-copy h3{font-size:36px}.format-copy p{margin-top:15px;color:var(--muted);font-size:15px}.format-copy ul{font-size:14px;color:var(--muted);margin-top:17px}.format-copy li+li{margin-top:7px}.format-copy .example{margin-top:20px;font-size:12px;font-weight:500;color:#5f531f}.crate{width:min(330px,100%);background:#bc9b69;border-radius:6px;position:relative;padding:26px 20px 19px;box-shadow:0 18px 25px #203c2e0d}.crate::before,.crate::after{content:"";position:absolute;left:14px;right:14px;height:4px;background:#9c8058}.crate::before{bottom:13px}.crate::after{top:14px}.crate-label{background:var(--ink);color:var(--white);padding:24px;position:relative;z-index:1;border:1px solid #48634b}.crate-label .mock-brand{font:400 32px/1 var(--serif);letter-spacing:-1px}.crate-label .mock-line{display:block;border-top:1px solid #819177;font-size:11px;line-height:1.6;margin-top:16px;padding-top:12px}.crate-label .mock-note{display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-top:16px;color:var(--gold)}.order-sheet{width:min(330px,100%);padding:26px;background:var(--white);border:1px solid #b7c1a8;border-radius:7px;box-shadow:0 15px 25px #203c2e0a}.order-sheet strong{font:400 29px/1.1 var(--serif)}.order-sheet .mock-row{display:flex;justify-content:space-between;gap:20px;font-size:12px;padding:13px 0;border-bottom:1px solid var(--line)}.order-sheet .mock-row:last-child{border:0}.basket{width:min(300px,100%);background:#d7ba88;border:1px solid #b19563;border-radius:6px 6px 24px 24px;padding:26px}.basket .basket-label{background:var(--white);border:1px solid #d8dccd;padding:25px;text-align:center}.basket .basket-label strong{font:400 32px/1 var(--serif)}.basket p{font-size:12px;margin-top:14px}.basket .mock-note{font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+    .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}.trust-item{border-top:2px solid #819277;padding-top:21px}.trust-item h3{font-size:27px}.trust-item p{font-size:14px;color:var(--muted);margin-top:13px}.trust-item .status{display:inline-block;margin-bottom:14px;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#6c571e}.questions{margin-top:40px}.questions .disclosure{margin-top:0;border-top:0}.questions .disclosure:first-child{border-top:1px solid var(--line)}
+    .conversation{display:grid;grid-template-columns:.85fr 1.15fr;gap:60px;align-items:start}.conversation-copy h2{font-size:clamp(37px,4.5vw,57px);margin-block:16px 23px}.conversation-copy .intro{font-size:16px}.conversation-copy ol{font-size:15px;color:var(--muted);margin-top:24px}.conversation-copy li+li{margin-top:10px}.notes-form{background:var(--white);border:1px solid var(--line);padding:28px;border-radius:14px}.notes-form h3{font-size:29px}.notes-form .fine{margin-top:10px}.field{margin-top:21px}.field label,.field legend{display:block;font-size:14px;font-weight:500;margin-bottom:8px}.field label small{font-size:12px;font-weight:400;color:var(--muted)}input[type="text"],textarea,select{width:100%;background:#fffefb;color:var(--ink);border:1px solid #a7b29b;border-radius:6px;padding:11px 12px;line-height:1.5;min-width:0}textarea{resize:vertical;min-height:115px}input::placeholder,textarea::placeholder{color:#6d746a;opacity:1}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field-row .field{min-width:0}fieldset.field{padding:0;border:0;margin-inline:0}.checks{display:grid;grid-template-columns:1fr 1fr;gap:10px}.checks label{display:flex;align-items:flex-start;gap:10px;font-weight:400;font-size:13px;margin:0;line-height:1.5;cursor:pointer}.checks input{accent-color:var(--ink);width:17px;height:17px;flex:none;margin:2px 0}.notes-form .actions{margin-top:25px}.notes-form .save-option{display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--muted);margin-top:18px}.notes-form .save-option input{accent-color:var(--ink);width:16px;height:16px;margin:3px 0;flex:none}.local-note{font-size:12px;color:var(--muted);border-top:1px solid var(--line);margin-top:18px;padding-top:15px}.form-tools{display:flex;flex-wrap:wrap;gap:17px;margin-top:16px}.plain-button{font-size:12px;padding:2px 0;background:none;border:0;text-decoration:underline;text-underline-offset:4px;color:var(--muted)}.form-status{font-size:13px;line-height:1.6;color:var(--ink);min-height:1.6em;margin-top:15px;overflow-wrap:anywhere}.no-script-note{padding:20px;border:1px solid #a89150;background:#f0e4bd;border-radius:7px;margin-top:25px;font-size:14px}.notes-fallback{margin-top:25px;padding:20px;border:1px solid var(--line);font-size:14px}.notes-fallback ul{margin-bottom:0}
+    .source-list{list-style:none;padding:0;margin:0}.source-list li{border-top:1px solid var(--line);padding:16px 0;display:grid;grid-template-columns:150px 1fr;gap:25px}.source-list .source-date{font-size:12px;color:var(--muted)}.source-list a{font-weight:500}.source-list p{font-size:13px;margin-top:6px}.source-list .historical{font-size:11px;color:#715817}.sources-note{border-top:1px solid var(--line);padding-top:18px;margin-top:8px;font-size:13px}.next{background:var(--ink);color:var(--white);padding-block:63px}.next-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:70px}.next h2{font-size:clamp(40px,5vw,65px);max-width:14ch;margin-top:15px}.next p{font-size:15px;color:#d0dac6;margin-top:23px;max-width:49ch}.next .actions{margin-top:29px}.contact{border-left:1px solid #56725a;padding-left:36px;align-self:center}.contact .name{font:400 31px/1.15 var(--serif);margin-top:13px}.contact .eyebrow{color:#c7d3be}.contact p{font-size:13px;line-height:1.8;margin-top:15px}.contact a{overflow-wrap:anywhere}.contact .institution{border-top:1px solid #56725a;padding-top:17px}.footer{padding-block:27px 36px}.footer-inner{display:flex;justify-content:space-between;align-items:start;gap:40px}.footer p{font-size:11px;color:var(--muted);max-width:78ch}.footer a{font-size:11px;white-space:nowrap}.to-top{position:fixed;bottom:22px;right:22px;z-index:10;background:var(--white);border:1px solid #a2af96;border-radius:50%;width:42px;height:42px;display:grid;place-items:center;text-decoration:none;box-shadow:0 4px 14px #203c2e15}.print-notes{display:none}
+    @media(min-width:1500px){.hero-grid{gap:95px}.hero-aside{max-width:430px}}
+    @media(max-width:1050px){.desktop-nav{gap:15px}.desktop-nav a:nth-child(2){display:none}.brand-sub{display:none}.hero-grid{gap:35px}.section-head{grid-template-columns:150px 1fr}.role{padding:30px}.money{gap:30px}.pilot-grid{gap:35px}.section{padding-block:70px}}
+    @media(max-width:760px){html{scroll-padding-top:85px}.top-inner{min-height:70px}.brand-mark{font-size:28px}.desktop-nav{display:none}.mobile-menu{display:block;border:0;margin:0;padding:0}.mobile-menu summary{list-style:none;font-size:13px;border:1px solid #a7b29b;padding:8px 13px;border-radius:5px}.mobile-menu summary::-webkit-details-marker{display:none}.mobile-menu nav{position:absolute;top:69px;right:0;left:0;background:var(--paper);border-bottom:1px solid var(--line);padding:12px var(--gutter) 20px;box-shadow:0 10px 20px #203c2e09}.mobile-menu nav a{display:block;padding:10px 0;font-size:15px;text-decoration:none}.hero{padding-block:32px 43px}.hero-meta{display:block}.hero-meta .edition{display:block;margin-top:9px}.hero-grid{grid-template-columns:1fr;padding-top:33px;gap:35px}.hero h1{font-size:clamp(62px,13vw,92px);max-width:12ch}.hero .intro{font-size:16px;max-width:48ch;margin-top:22px}.hero .actions{margin-top:24px}.hero-aside{max-width:450px;width:100%;margin-inline:auto;padding:22px;border-radius:150px 150px 13px 13px}.produce-art{height:190px}.hero-aside .stamp{right:8px;top:7px;width:73px;height:73px;font-size:9px}.origin-label{padding:19px}.hero-foot{margin-top:36px;grid-template-columns:1fr}.hero-foot div{padding:17px 0}.hero-foot div+div{border-left:0;border-top:1px solid var(--line);padding-left:0}.hero-foot div:last-child{padding-bottom:0}.hero-foot strong{font-size:22px}.section{padding-block:52px}.section-head{grid-template-columns:1fr;gap:16px;margin-bottom:31px}.section-head .eyebrow{padding-top:0}.section-head h2{max-width:20ch}.section-head .intro{font-size:16px;margin-top:16px}.benefits{grid-template-columns:1fr;gap:30px}.statement{max-width:30ch;font-size:29px}.roles{grid-template-columns:1fr}.role{padding:29px 25px}.role+.role{border-left:0;border-top:1px solid #5b715c}.roles h3{font-size:32px}.roles .common{padding:23px 25px}.route{grid-template-columns:1fr 1fr;gap:30px 15px}.route-item{padding-right:8px}.route-item p{max-width:25ch}.money{grid-template-columns:1fr;gap:30px}.money-ledger{padding:24px}.pilot-grid{grid-template-columns:1fr;gap:33px}.pilot-window{position:static;display:grid;grid-template-columns:.8fr 1.2fr;gap:0 25px;padding:25px}.pilot-window .eyebrow{grid-column:1/-1}.pilot-window .time{font-size:67px}.pilot-window .time-wrap{align-self:center}.pilot-window>p{font-size:13px}.pilot-window .fine{grid-column:1/-1}.pilot-steps li{padding-left:35px}.formats-intro{grid-template-columns:1fr;gap:15px}.format-panel{grid-template-columns:1fr;gap:25px}.format-visual{min-height:260px}.format-copy h3{font-size:32px}.trust-grid{grid-template-columns:1fr;gap:28px}.trust-item{padding-top:18px}.trust-item p{margin-top:9px}.conversation{grid-template-columns:1fr;gap:30px}.conversation-copy h2{max-width:15ch}.notes-form{padding:24px}.source-list li{grid-template-columns:1fr;gap:8px}.next{padding-block:47px}.next-grid{grid-template-columns:1fr;gap:38px}.next h2{max-width:15ch}.contact{border-left:0;border-top:1px solid #56725a;padding:27px 0 0}.footer-inner{display:block}.footer a{display:inline-block;margin-top:15px}.to-top{right:15px;bottom:15px;width:38px;height:38px}}
+    @media(max-width:390px){.hero h1{font-size:clamp(48px,15.5vw,61px)}.field-row,.checks{grid-template-columns:1fr}.notes-form{padding:20px}.button{padding-inline:17px}.hero .actions .button{width:100%}.pilot-window{grid-template-columns:1fr}.pilot-window .time{font-size:65px}.hero-aside .stamp{right:1px}.label-product{font-size:28px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+    @page{size:A4;margin:15mm}
+    @media print{html{scroll-behavior:auto;font-size:10pt}body{font-size:10pt;color:#172d22;background:white;line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}.wrap{max-width:none;padding:0}.top,.hero .actions,.hero-note,.progress,.mobile-menu,.to-top,.format-tabs,.no-print,.notes-form,.footer a{display:none!important}.hero{padding:0 0 24px}.hero-grid{padding-top:24px;gap:25px;grid-template-columns:1.1fr .9fr}.hero h1{font-size:57px}.hero-meta{padding-bottom:12px}.hero .intro{font-size:11pt}.hero-aside{padding:15px;max-width:260px}.produce-art{height:130px}.hero-aside .stamp{display:none}.origin-label{padding:14px}.label-product{font-size:24px}.aside-caption{font-size:8pt}.hero-foot{margin-top:24px}.hero-foot strong{font-size:17pt}.hero-foot p{font-size:9pt}.section{padding:28px 0}.section-head{grid-template-columns:110px 1fr;gap:20px;margin-bottom:22px}.section-head h2,.conversation-copy h2{font-size:32px}.section-head .intro,.intro{font-size:10pt}.eyebrow{font-size:8pt}.benefits{gap:25px}.statement{font-size:24px}.benefit-list p,.note-box,.money-explainer p,.agreement p,.route-item p,.pilot-steps p,.trust-item p,.format-copy p,.format-copy li,.detail-body,.next p{font-size:9pt}.note-box{padding:14px}.role{padding:22px}.roles h3{font-size:26px}.roles li{font-size:9pt;padding-block:8px}.roles .common{padding:17px 22px;font-size:9pt}.route{margin-top:22px}.route-item strong{font-size:20px}.money{gap:25px}.money-ledger{padding:20px}.ledger-title{font-size:24px}.ledger-line{font-size:9pt;padding-block:11px}.ledger-line span:first-child{font-size:20px}.pilot-window{position:static;padding:22px}.pilot-window .time{font-size:61px}.pilot-window p,.pilot-window .fine{font-size:9pt}.pilot-steps h3{font-size:24px}.pilot-steps li{padding-bottom:20px}.pilot-check{margin-top:20px}.format-panel{display:grid!important;grid-template-columns:.8fr 1.2fr;gap:24px;margin-bottom:25px;break-inside:avoid}.format-panel[hidden]{display:grid!important}.format-visual{min-height:190px;padding:18px}.format-copy h3{font-size:26px}.format-copy p{margin-top:10px}.format-copy .example{font-size:8pt}.format-panel+.format-panel{border-top:1px solid var(--line);padding-top:25px}.crate,.order-sheet,.basket{max-width:235px;padding:17px}.crate-label{padding:17px}.crate-label .mock-brand,.basket .basket-label strong,.order-sheet strong{font-size:25px}.trust-grid{gap:20px}.trust-item h3{font-size:23px}.disclosure{margin-top:18px}.disclosure summary{font-size:10pt;padding-block:14px}.disclosure summary::after{display:none}.disclosure .detail-body{display:block!important;content-visibility:visible!important}.disclosure::details-content{display:block;content-visibility:visible}.questions .disclosure{margin-top:0}.source-list li{grid-template-columns:100px 1fr;gap:18px;padding:12px 0}.source-list p,.source-list .source-date,.sources-note{font-size:8pt}.source-list a{font-size:9pt;overflow-wrap:anywhere}.conversation{grid-template-columns:1fr}.conversation-copy h2{max-width:none;margin-block:10px 15px}.conversation-copy ol{font-size:9pt}.print-notes{display:block;white-space:pre-wrap;font:9pt/1.6 var(--sans);background:#f4f3e9;border:1px solid #d4d9c9;padding:17px;margin-top:20px;overflow-wrap:anywhere}.print-notes:empty{display:none}.next{padding:30px 22px;margin-top:12px}.next h2{font-size:34px}.next .actions{display:none}.next-grid{gap:30px}.contact{padding-left:25px}.contact .name{font-size:25px}.contact p{font-size:9pt}.footer{padding:20px 0}.footer p{font-size:8pt}h2,h3,summary{break-after:avoid}p,li{orphans:3;widows:3}.role,.trust-item,.money-ledger,.pilot-window,.hero-aside,.next,.note-box{break-inside:avoid}a{text-decoration:none}.no-script-note{display:none}}
+  </style>
 </head>
-<body>
-
-<header class="top">
-  <div class="wrap">
-    <div class="brand">Green Point<small>nombre de trabajo</small></div>
-    <nav aria-label="Secciones">
-      <a href="#idea">La idea</a>
-      <a href="#mercado">Mercado</a>
-      <a href="#juntos">Cómo trabajamos</a>
-      <a href="#canales">Canales</a>
-      <a href="#piso">Su mínimo</a>
-      <a href="#reglas">Reglas</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-<div class="wrap">
-
-<div class="hero">
-  <p class="mono">Propuesta para la asociación de productores · Ceferino Bongiorno, Tu Vida S.R.L.</p>
-  <h1>Crecemos <em>juntos.</em></h1>
-  <p class="lead">Una marca de frutas y verduras agroecológicas de La Plata, armada con ustedes. La asociación de productores produce. Nosotros nos ocupamos de la marca, la venta, la llegada a los comercios y la logística. Las ganancias se comparten.</p>
-  <p class="ask">Antes de hablar de números queremos escucharlos: ¿cuánto quieren que les quede, como mínimo, por esta asociación?</p>
-  <div class="notice" role="note">
-    <span class="mono">Reserva mutua</span>
-    <p>Esta propuesta es el comienzo de una conversación, no un contrato. Les pedimos reserva sobre lo que leen acá mientras lo charlamos, y nos comprometemos a lo mismo: lo que ustedes nos cuenten sobre sus tierras, su producción y sus números no se comparte con terceros sin su permiso.</p>
-  </div>
-</div>
-
-<section id="idea">
-  <div class="sec-head">
-    <p class="mono">01 · La idea</p>
-    <h2>Una marca propia para lo que ustedes ya hacen bien</h2>
-    <p class="lead">Queremos una marca cercana y equilibrada, distinta a la verdulería tradicional, que ponga la fruta y la verdura agroecológica al alcance de más gente. Con vocación nacional, empezando por La Plata, City Bell, Gonnet, Villa Elisa, Ensenada y Berisso.</p>
-  </div>
-  <div class="roles">
-    <div class="role">
-      <h3>Por producto, no por bolsón</h3>
-      <p>Vamos a vender una propuesta más cuidada: selección pareja, buena presentación y el nombre de la familia a la vista. El bolsón queda para el producto más maduro o más chico, que también tiene su lugar y su precio acordado de antemano.</p>
+<body id="inicio">
+  <a class="skip" href="#contenido">Ir al contenido</a>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="identity" href="#inicio" aria-label="Green Point, inicio"><span class="brand-mark">green point<span aria-hidden="true"></span></span><span class="brand-sub">Una propuesta<br>de Tu Vida</span></a>
+      <nav class="desktop-nav" aria-label="Navegación principal"><a href="#propuesta">La propuesta</a><a href="#equipo">Cómo trabajamos</a><a href="#acuerdo">El acuerdo</a><a href="#prueba">Primera prueba</a><a class="button small" href="#conversemos">Conversemos <span aria-hidden="true">↗</span></a></nav>
+      <details class="mobile-menu no-print" id="mobile-menu"><summary>Explorar <span aria-hidden="true">≡</span></summary><nav aria-label="Navegación móvil"><a href="#propuesta">La propuesta</a><a href="#equipo">Cómo trabajamos</a><a href="#acuerdo">El acuerdo económico</a><a href="#prueba">Primera prueba</a><a href="#formatos">Cómo se presentaría</a><a href="#conversemos">Conversemos</a></nav></details>
+    </div><div class="progress" id="progress" aria-hidden="true"></div>
+  </header>
+  <main id="contenido">
+    <div class="wrap">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-meta"><p class="eyebrow"><span class="dot" aria-hidden="true"></span>Para Delina y las familias de Cotepo</p><span class="edition">Propuesta de trabajo · Noviembre 2026 · V.02</span></div>
+        <div class="hero-grid">
+          <div>
+            <h1 id="hero-title">De su quinta,<em>a más mesas.</em></h1>
+            <p class="intro">Queremos desarrollar con ustedes una marca de frutas y verduras agroecológicas. Sumamos la estructura comercial de Tu Vida para acercar su producción a más compradores, con precios, pagos y responsabilidades acordados.</p>
+            <div class="actions"><a class="button" href="#propuesta">Conocer la propuesta <span aria-hidden="true">↓</span></a><a class="button secondary" href="#prueba">Ver cómo empezaríamos</a></div>
+            <p class="hero-note">Una primera conversación. Lectura principal: unos 5 minutos.</p>
+          </div>
+          <figure class="hero-aside">
+            <div class="stamp" aria-hidden="true">ORIGEN<br>A LA VISTA<br>•</div>
+            <div class="produce-art">
+              <svg viewBox="0 0 360 270" width="330" height="248" role="img" aria-labelledby="produce-title produce-desc">
+                <title id="produce-title">Ilustración de una cosecha</title><desc id="produce-desc">Tomates, zanahorias y hojas. Representación gráfica de producto fresco.</desc>
+                <ellipse cx="180" cy="240" rx="137" ry="13" fill="#c6cdb8"/>
+                <g fill="#4f7047"><path d="M158 196C101 170 75 119 96 71c28 7 55 35 62 75-7-60 19-105 55-120 20 35 12 81-18 117 35-36 71-41 95-27-8 39-46 67-93 67l-19 36z"/><path d="M103 176C58 149 51 106 66 80c28 9 49 39 48 68 10-47 39-73 65-68 7 31-13 77-44 102z" fill="#6b8853"/></g>
+                <g stroke="#dfe6d0" stroke-width="2" fill="none"><path d="m175 204 34-164m-41 123-63-77m69 103 99-62m-156 53L72 94"/></g>
+                <g transform="rotate(-26 242 167)"><path d="M226 108c-13 8-14 26-7 46l23 78c3 8 8 8 10-1l17-80c5-22-2-38-15-44z" fill="#d79545"/><path d="m240 111-5-49m10 49 18-52m-26 51-24-39" fill="none" stroke="#55784a" stroke-width="8" stroke-linecap="round"/><path d="m225 148 18 3m-11 21 17 3m-10 20 12 2" stroke="#b97732" stroke-width="3"/></g>
+                <g><path d="M62 187c-4-29 15-51 43-51 13 0 23 4 32 12 20-4 43 12 45 36 3 34-26 57-62 57-34 0-55-20-58-54z" fill="#ad563d"/><path d="m111 137 7-18 8 17 23-1-18 14 5 17-19-13-18 9 5-17-18-10z" fill="#3b5d37"/><path d="M77 183c-1-11 4-20 13-25" stroke="#cc8a6c" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+                <g><path d="M171 209c-3-23 13-41 35-41 11 0 19 3 26 9 16-3 34 10 36 29 3 27-21 45-49 45-27 0-45-16-48-42z" fill="#c37c37"/><path d="m211 169 4-14 8 13 18-1-14 11 4 14-16-10-14 7 4-13-14-7z" fill="#48613a"/></g>
+              </svg>
+            </div>
+            <div class="origin-label"><div class="label-top"><span class="eyebrow">Green Point</span><span class="fine">Nombre de trabajo</span></div><div class="label-product">Cada cosecha tiene un origen.</div><p class="muted" style="margin-top:10px">La familia que produce, la quinta y la temporada: información que queremos poner a la vista.</p><div class="label-bottom"><span>Producción agroecológica</span><span>La Plata y región</span></div></div>
+            <figcaption class="aside-caption">Ilustración y concepto de presentación. Identidad a desarrollar juntos.</figcaption>
+          </figure>
+        </div>
+        <div class="hero-foot"><div><strong>Un canal adicional</strong><p>Una propuesta para complementar sus ventas actuales.</p></div><div><strong>Condiciones claras</strong><p>Precio, cantidad y fecha de pago antes de operar.</p></div><div><strong>Una primera prueba</strong><p>Empezar con una escala que podamos evaluar juntos.</p></div></div>
+      </section>
+      <section class="section" id="propuesta" aria-labelledby="propuesta-title">
+        <div class="section-head"><p class="eyebrow">01 / La propuesta</p><div><h2 id="propuesta-title">Lo que ya construyeron,<br><em>con más alcance.</em></h2><p class="intro">Ustedes aportan producción, conocimientos y experiencia de venta. Tu Vida propone sumar una marca independiente, desarrollo comercial y organización logística para abrir nuevas oportunidades.</p></div></div>
+        <div class="benefits"><div><p class="statement">El objetivo es que un nuevo canal sea conveniente para las familias, sostenible para el proyecto y <em>valioso para quien compra.</em></p><div class="note-box"><strong>Su identidad sigue siendo parte del origen.</strong><br>El nombre Green Point es provisorio. La presentación de las familias y cualquier uso del nombre Cotepo se conversarían y autorizarían antes de publicarse.</div></div><ol class="benefit-list"><li><span class="num" aria-hidden="true">01</span><div><strong>Más oportunidades de venta</strong><p>Buscar compradores y pedidos adicionales, empezando por una zona y un canal concretos.</p></div></li><li><span class="num" aria-hidden="true">02</span><div><strong>Mejor información para organizarse</strong><p>Compartir pedidos, disponibilidad y resultados. La planificación productiva se acuerda con ustedes.</p></div></li><li><span class="num" aria-hidden="true">03</span><div><strong>Origen reconocido</strong><p>Desarrollar una presentación que explique quién produce y cómo se respalda el carácter agroecológico.</p></div></li><li><span class="num" aria-hidden="true">04</span><div><strong>Números que puedan revisarse</strong><p>Registrar entregas, ventas, gastos acordados y liquidaciones. Evaluar el resultado con información compartida.</p></div></li></ol></div>
+      </section>
+      <section class="section" id="equipo" aria-labelledby="equipo-title">
+        <div class="section-head"><p class="eyebrow">02 / El trabajo conjunto</p><div><h2 id="equipo-title">Cada parte aporta.<br><em>El rumbo se acuerda.</em></h2><p class="intro">Proponemos empezar con una alianza comercial. Las decisiones sobre una sociedad, la propiedad de la marca o una participación futura se tratarían por separado, con toda la información.</p></div></div>
+        <div class="roles"><div class="role"><p class="eyebrow">Las familias productoras</p><h3>El saber de la quinta.</h3><ul><li>Informar productos, temporadas y disponibilidad real.</li><li>Proponer precios y condiciones que les resulten convenientes.</li><li>Acordar cosecha, clasificación y presentación de origen.</li><li>Compartir cómo se respaldan las prácticas agroecológicas.</li><li>Elegir referentes y validar las decisiones según su organización.</li></ul></div><div class="role"><p class="eyebrow">Tu Vida S.R.L.</p><h3>La conexión comercial.</h3><ul><li>Desarrollar la marca y los materiales de venta.</li><li>Buscar compradores y organizar los pedidos.</li><li>Coordinar retiro, conservación y entregas según cada producto.</li><li>Gestionar atención al cliente y cobranzas.</li><li>Registrar la operación y compartir las liquidaciones acordadas.</li></ul></div><div class="common"><strong>Entre ambas partes:</strong> elegir el surtido inicial, definir los precios, acordar responsabilidades y revisar si la prueba funciona.</div></div>
+        <div class="route" aria-label="Recorrido propuesto de un pedido"><div class="route-item"><span>01 / Pedido</span><strong>Demanda confirmada</strong><p>El comprador pide y se confirma qué puede entregarse.</p></div><div class="route-item"><span>02 / Origen</span><strong>Cosecha y preparación</strong><p>Se prepara la cantidad acordada, con identificación de origen.</p></div><div class="route-item"><span>03 / Distribución</span><strong>Recepción y entrega</strong><p>Se registran cantidades, condiciones y destino de la mercadería.</p></div><div class="route-item"><span>04 / Información</span><strong>Pago y revisión</strong><p>Se liquida en el plazo acordado y se comparten los resultados.</p></div></div>
+      </section>
+      <section class="section" id="acuerdo" aria-labelledby="acuerdo-title">
+        <div class="section-head"><p class="eyebrow">03 / El acuerdo económico</p><div><h2 id="acuerdo-title">Saber qué se cobra.<br><em>Entender qué se comparte.</em></h2><p class="intro">La base que proponemos conversar es un precio por la mercadería aceptada y, si se acuerda, una participación adicional en el resultado positivo. Son dos conceptos distintos.</p></div></div>
+        <div class="money"><div class="money-ledger"><p class="eyebrow" style="margin-bottom:15px">Esquema para conversar</p><h3 class="ledger-title">Cómo se ordenaría la cuenta.</h3><div class="ledger-line"><span>+</span><span>Ingreso neto de las ventas del proyecto</span></div><div class="ledger-line"><span>−</span><span>Importe acordado por la producción aceptada</span></div><div class="ledger-line"><span>−</span><span>Costos de la operación previamente definidos</span></div><div class="ledger-line result"><span>=</span><span>Resultado de la operación</span></div><p class="fine">Si el resultado es positivo y acordamos compartirlo, se aplica la participación definida. Los porcentajes, los costos incluidos y el momento de liquidación están por acordar.</p></div><div class="money-explainer"><h3>El precio de la producción<br>es el punto de partida.</h3><p>Por cada producto hay que definir unidad, calidad aceptada, cantidad y plazo de pago. El importe que recibe la familia cubre sus costos y su resultado: no equivale íntegramente a ganancia.</p><div class="agreement-list"><div class="agreement"><strong>Antes de cada entrega</strong><p>Pedido confirmado y condiciones documentadas. La frecuencia de actualización de precios se acuerda según producto y temporada.</p></div><div class="agreement"><strong>Después de la recepción</strong><p>Constancia de lo aceptado y de cualquier diferencia. Proponemos que las pérdidas comerciales posteriores no reduzcan retroactivamente ese importe.</p></div><div class="agreement"><strong>Durante la prueba</strong><p>Resumen semanal de la operación y pagos en las fechas convenidas. Una revisión más amplia al finalizar el piloto.</p></div></div></div></div>
+        <details class="disclosure"><summary>Lo que debemos resolver antes de empezar</summary><div class="detail-body"><ul><li><strong>Modalidad:</strong> confirmar si la prueba operará mediante compra de producción u otra forma acordada.</li><li><strong>Precio y pago:</strong> unidad, clasificación, cantidades, actualización, comprobantes y vencimiento.</li><li><strong>Capital de trabajo:</strong> quién financia compras, logística y plazos concedidos a compradores.</li><li><strong>Costos:</strong> cuáles se descuentan al calcular el resultado, cómo se documentan y quién los aprueba.</li><li><strong>Riesgos:</strong> recepción, rechazos, transporte, conservación, devoluciones y falta de venta.</li><li><strong>Participación adicional:</strong> si la habrá, sobre qué resultado y en qué proporción.</li><li><strong>Compradores:</strong> si vendemos a un comercio, su margen es independiente del resultado de este proyecto.</li><li><strong>Continuidad:</strong> qué sucede si alguna parte quiere terminar y cómo se cierran entregas y pagos pendientes.</li></ul></div></details>
+        <div class="note-box"><strong>La primera pregunta es para ustedes:</strong> ¿qué precio y condiciones necesitan para que este nuevo canal les resulte conveniente? Podemos empezar con esa información y profundizar los costos cuando sea útil para ambas partes.</div>
+      </section>
+      <section class="section" id="prueba" aria-labelledby="prueba-title">
+        <div class="section-head"><p class="eyebrow">04 / Una primera prueba</p><div><h2 id="prueba-title">Empezar a una escala<br><em>que podamos cuidar.</em></h2><p class="intro">Antes de proyectar una expansión, proponemos comprobar que podemos vender, entregar y pagar de manera ordenada. La escala y el calendario se definirían juntos.</p></div></div>
+        <div class="pilot-grid"><aside class="pilot-window"><p class="eyebrow">Duración orientativa</p><div class="time-wrap"><div class="time">6–8</div><span class="unit">semanas de operación</span></div><p>Un surtido reducido, una zona logística acotada y un grupo inicial de compradores interesados.</p><p class="fine">Es un punto de partida para conversar. El piloto comenzaría después de acordar condiciones y confirmar compradores y capacidad operativa.</p></aside><div><ol class="pilot-steps"><li><h3>Conocernos y relevar</h3><p>Visitar las quintas, conocer la organización y conversar sobre productos, disponibilidad, formatos y canales actuales.</p></li><li><h3>Preparar la primera operación</h3><p>Elegir productos y compradores. Acordar precio, cobro, retiro, conservación, entrega y responsabilidad por diferencias.</p></li><li><h3>Operar y registrar</h3><p>Trabajar con pedidos confirmados, registrar cada entrega y revisar semanalmente ventas, pagos y dificultades.</p></li><li><h3>Evaluar y decidir</h3><p>Revisar los resultados con las familias. Continuar, ajustar o cerrar la prueba con las cuentas conciliadas.</p></li></ol><div class="pilot-check"><strong>¿Qué miraríamos juntos?</strong><div class="metrics" aria-label="Aspectos a evaluar"><span>Venta y recompra</span><span>Pago a término</span><span>Pérdidas</span><span>Costos reales</span><span>Calidad al entregar</span></div></div></div></div>
+      </section>
     </div>
-    <div class="role">
-      <h3>Con la cara de cada finca</h3>
-      <p>Cada producto cuenta quién lo cultivó y dónde. El uso del nombre y la imagen de sus fincas se acuerda por escrito con la asociación antes de mostrarlos.</p>
+    <section class="section formats" id="formatos" aria-labelledby="formatos-title"><div class="wrap">
+      <div class="section-head"><p class="eyebrow">05 / Del origen a la compra</p><div><h2 id="formatos-title">La misma producción.<br><em>La presentación adecuada.</em></h2><p class="intro">La forma de vender depende de quién compra y de cómo recibe y conserva el producto. Estos ejemplos muestran posibilidades; el piloto tendrá prioridades concretas.</p></div></div>
+      <div class="formats-intro"><h3>Por producto, por pedido<br>o en una selección semanal.</h3><p>El bolsón puede reunir productos de primera calidad. El tamaño, el grado de madurez y la clasificación se acuerdan por separado del formato de venta.</p></div>
+      <div class="format-tabs no-print" id="format-tabs" hidden role="tablist" aria-label="Ejemplos de presentación"><button type="button" role="tab" id="tab-comercios" aria-controls="panel-comercios" aria-selected="true" tabindex="0">Comercios</button><button type="button" role="tab" id="tab-gastronomia" aria-controls="panel-gastronomia" aria-selected="false" tabindex="-1">Gastronomía</button><button type="button" role="tab" id="tab-hogares" aria-controls="panel-hogares" aria-selected="false" tabindex="-1">Hogares</button></div>
+      <div class="format-panel" id="panel-comercios" role="tabpanel" aria-labelledby="tab-comercios"><div class="format-visual" role="img" aria-label="Ejemplo ilustrativo de un cajón identificado con la marca y su origen"><div class="crate"><div class="crate-label"><span class="mock-brand">green point.</span><span class="mock-line">Producto y variedad<br>Familia y quinta de origen<br>Fecha de cosecha o preparación</span><span class="mock-note">Etiqueta ilustrativa</span></div></div></div><div class="format-copy"><h3>Un origen que se reconoce<br>en el punto de venta.</h3><p>Presentación a granel o en unidades preparadas, según espacio, rotación y condiciones de conservación de cada local.</p><ul><li>Identificación de producto, lote y origen.</li><li>Información clara para el comercio y su cliente.</li><li>Reposición acorde con la venta real.</li></ul><p class="example">Canal propuesto para evaluar primero: comercios de cercanía.</p></div></div>
+      <div class="format-panel" id="panel-gastronomia" role="tabpanel" aria-labelledby="tab-gastronomia"><div class="format-visual" role="img" aria-label="Ejemplo ilustrativo de un pedido para gastronomía"><div class="order-sheet"><p class="eyebrow" style="margin-bottom:15px">Green Point / Pedido</p><strong>De la quinta<br>a la cocina.</strong><div class="mock-row"><span>Producto y variedad</span><span>A convenir</span></div><div class="mock-row"><span>Cantidad y unidad</span><span>A convenir</span></div><div class="mock-row"><span>Día de entrega</span><span>A convenir</span></div><p class="fine" style="margin-top:12px">Formato de pedido ilustrativo.</p></div></div><div class="format-copy"><h3>Regularidad para quien<br>organiza una cocina.</h3><p>Pedidos por producto y cantidades acordadas. La disponibilidad de temporada debe conocerse antes de confirmar el abastecimiento.</p><ul><li>Especificación de calidad y presentación.</li><li>Días de pedido y entrega definidos.</li><li>Sustituciones consultadas antes del despacho.</li></ul><p class="example">Posible canal adicional, sujeto a demanda y capacidad.</p></div></div>
+      <div class="format-panel" id="panel-hogares" role="tabpanel" aria-labelledby="tab-hogares"><div class="format-visual" role="img" aria-label="Ejemplo ilustrativo de una selección semanal de estación"><div class="basket"><div class="basket-label"><p class="eyebrow" style="justify-content:center;margin-bottom:15px">Green Point</p><strong>Esta semana,<br>la cosecha.</strong><p>Una selección de estación,<br>con su origen a la vista.</p><p class="mock-note">Presentación ilustrativa</p></div></div></div><div class="format-copy"><h3>Elegir por producto.<br>O descubrir la temporada.</h3><p>Venta por unidades acordadas o una selección semanal. El contenido, el peso o la cantidad y las condiciones de entrega deben ser claros antes de comprar.</p><ul><li>Fotos e información fieles a la oferta disponible.</li><li>Origen y criterios de selección identificados.</li><li>Entrega o retiro dentro de una zona definida.</li></ul><p class="example">Venta directa a evaluar en una etapa posterior.</p></div></div>
+    </div></section>
+    <div class="wrap">
+      <section class="section" id="confianza" aria-labelledby="confianza-title">
+        <div class="section-head"><p class="eyebrow">06 / La confianza</p><div><h2 id="confianza-title">Un acuerdo que también<br><em>cuide la relación.</em></h2><p class="intro">La marca debería representar bien el trabajo de las familias. Para eso hacen falta información compartida, decisiones claras y respeto por su organización.</p></div></div>
+        <div class="trust-grid"><div class="trust-item"><span class="status">Autonomía</span><h3>Su organización,<br>sus decisiones.</h3><p>Ustedes eligen cómo representarse. Proponemos un referente operativo y un mecanismo claro para validar las decisiones que involucren al conjunto.</p></div><div class="trust-item"><span class="status">Transparencia</span><h3>Registro de cada<br>entrega y cada pago.</h3><p>Las cantidades recibidas, las diferencias, los costos acordados y las liquidaciones deben poder consultarse y revisarse.</p></div><div class="trust-item"><span class="status">Origen e identidad</span><h3>Su nombre e imagen,<br>con autorización.</h3><p>Antes de usar nombres, fotografías o historias, se acuerdan los permisos con las personas y la organización correspondientes.</p></div></div>
+        <div class="questions"><details class="disclosure"><summary>¿Qué sucede con los canales donde ya venden?</summary><div class="detail-body"><p>Esta propuesta busca sumar oportunidades. Para el piloto proponemos trabajar sin exclusividad general y conversar cómo complementar los canales existentes, evitando comprometer cantidades que ya tengan otro destino.</p></div></details><details class="disclosure"><summary>¿Quién sería dueño de la marca?</summary><div class="detail-body"><p>Está por acordar. La titularidad, la inversión inicial, el uso del nombre Cotepo y las condiciones de continuidad se definirían por escrito antes de usar una identidad conjunta. Este documento no asigna participaciones societarias ni derechos sobre una marca.</p></div></details><details class="disclosure"><summary>¿Cómo se respaldaría la producción agroecológica?</summary><div class="detail-body"><p>Primero conoceríamos las prácticas, registros y mecanismos de garantía que utilizan las familias. A partir de esa información se acordaría cómo comunicar el origen y el método de producción de cada producto.</p><p>No se presentarán productos como orgánicos certificados sin el respaldo correspondiente. La información debe ser verificable y evitar promesas generales que no puedan sostenerse.</p></div></details><details class="disclosure"><summary>¿Qué compromiso implica leer esta propuesta?</summary><div class="detail-body"><p>Es un documento para conversar. No se solicita aceptar una compra, una exclusividad ni una sociedad desde esta página. Las condiciones de una operación se acordarían y documentarían antes de comenzar.</p><p>Proponemos tratar con reserva la información productiva y económica que intercambiemos. Cualquier acuerdo específico de confidencialidad se conversaría por separado.</p></div></details></div>
+      </section>
+      <section class="section" id="conversemos" aria-labelledby="conversemos-title">
+        <div class="conversation"><div class="conversation-copy"><p class="eyebrow">07 / La primera conversación</p><h2 id="conversemos-title">Antes de avanzar,<br><em>queremos escucharlos.</em></h2><p class="intro">Podemos coordinar una visita y conversar con los referentes que elijan. Para ese encuentro, alcanza con empezar por tres temas:</p><ol><li>Qué productos y cantidades podrían destinar a una primera prueba.</li><li>Qué precios, formatos y condiciones necesitan.</li><li>Qué dudas o propuestas quieren poner sobre la mesa.</li></ol><p class="fine">No hace falta completar nada para conversar. También pueden escribirnos directamente.</p><div class="actions" style="margin-top:25px"><a class="button secondary" href="https://wa.me/17282057857?text=Hola%20Ceferino%2C%20vimos%20la%20propuesta%20Green%20Point%20y%20queremos%20coordinar%20una%20charla." target="_blank" rel="noopener noreferrer">Escribir al contacto del proyecto <span aria-hidden="true">↗</span></a></div></div>
+          <div><div class="notes-fallback" id="notes-fallback"><strong>Guía para el encuentro</strong><ul><li>Productos y temporada.</li><li>Disponibilidad y presentaciones.</li><li>Precios y fechas de pago.</li><li>Preguntas de las familias.</li></ul><p>Pueden llevar sus anotaciones a la visita o compartirlas por WhatsApp.</p></div>
+          <form class="notes-form no-print" id="notes-form" hidden><h3>Preparen sus temas.</h3><p class="fine" id="form-help">Opcional. Pueden anotar una primera idea y compartirla cuando quieran.</p><div class="field"><label for="note-name">Nombre o grupo <small>· opcional</small></label><input id="note-name" name="name" type="text" autocomplete="off" maxlength="100" placeholder="Cómo quieren presentarse" aria-describedby="form-help"></div><div class="field-row"><div class="field"><label for="note-products">Productos o temporada</label><input id="note-products" name="products" type="text" autocomplete="off" maxlength="240" placeholder="Ej.: hojas de estación"></div><div class="field"><label for="note-availability">Disponibilidad orientativa</label><input id="note-availability" name="availability" type="text" autocomplete="off" maxlength="160" placeholder="Cantidad, unidad y frecuencia"></div></div><fieldset class="field"><legend>¿Qué quieren conversar?</legend><div class="checks"><label><input type="checkbox" name="topics" value="Precios y pagos">Precios y pagos</label><label><input type="checkbox" name="topics" value="Retiro y entregas">Retiro y entregas</label><label><input type="checkbox" name="topics" value="Calidad y clasificación">Calidad y clasificación</label><label><input type="checkbox" name="topics" value="Marca y participación">Marca y participación</label></div></fieldset><div class="field"><label for="note-questions">Sus preguntas o propuestas</label><textarea id="note-questions" name="questions" maxlength="2000" placeholder="Qué les interesa, qué les preocupa o qué harían distinto."></textarea></div><label class="save-option"><input type="checkbox" id="remember-notes">Recordar estas notas en este navegador.</label><div class="actions"><button class="button" type="button" id="share-notes">Preparar mensaje de WhatsApp <span aria-hidden="true">↗</span></button><button class="button secondary" type="button" id="download-notes">Descargar notas</button></div><div class="form-tools"><button class="plain-button" type="button" id="copy-notes">Copiar resumen</button><button class="plain-button" type="button" id="clear-notes">Borrar mis notas</button></div><p class="form-status" id="form-status" role="status" aria-live="polite"></p><p class="local-note">Las notas no se envían a Tu Vida desde esta página. Al abrir WhatsApp se prepara un mensaje: ustedes deciden si lo envían. Si eligen recordarlas, quedan guardadas en este navegador hasta que las borren.</p></form><pre class="print-notes" id="print-notes"></pre></div></div>
+          <noscript><p class="no-script-note">Pueden leer la propuesta completa y usar los contactos del final para conversar. También pueden imprimirla desde el menú de su navegador.</p></noscript>
+      </section>
+      <section class="section" id="respaldo" aria-labelledby="respaldo-title" style="padding-top:32px">
+        <div class="eyebrow" id="respaldo-title">Para profundizar / Contexto y fuentes</div><details class="disclosure" id="sources"><summary>Antecedentes que ayudan a pensar el proyecto</summary><div class="detail-body"><p>Estas fuentes aportan contexto. No reemplazan el relevamiento con las familias ni una validación de demanda entre compradores de la región.</p><ul class="source-list"><li><span class="source-date">CoTePo / UTT<br>03.07.2020<br><span class="historical">Antecedente antiguo</span></span><div><a href="https://utt.com.ar/2020/07/03/certificaciones-agroecologicas-sin-veneno-y-con-justicia-social/" target="_blank" rel="noopener noreferrer">Organización y garantías agroecológicas</a><p>La publicación identifica a Delina Puma con CoTePo y describe el trabajo de las familias. Se toma como antecedente histórico, sin atribuirle cifras actuales al grupo.</p></div></li><li><span class="source-date">Mercados Bonaerenses<br>Consulta: 02.11.2026</span><div><a href="https://mi.mda.gba.gob.ar/mercados/bonaerenses/mercados" target="_blank" rel="noopener noreferrer">Mercado Bonaerense Fijo de La Plata</a><p>El registro provincial ubica el mercado en 520 y 116. Es una referencia distinta del Mercado Central de Buenos Aires.</p></div></li><li><span class="source-date">Cotepo / Venta local<br>01.11.2026</span><div><a href="https://info135.com.ar/2026/11/01/el-mercado-bonaerense-fijo-la-plata-renovo-sus-ofertas-semanales-con-descuentos-y-reintegros/" target="_blank" rel="noopener noreferrer">Presencia comercial mencionada en prensa local</a><p>La nota incluye a Cooperativa Cotepo entre quienes ofrecen verduras y bolsones. Confirma una referencia comercial pública; la denominación legal y la representación se verificarán directamente.</p></div></li><li><span class="source-date">Tu Vida S.R.L.<br>Consulta: 02.11.2026</span><div><a href="https://tuvida.com.ar/" target="_blank" rel="noopener noreferrer">Estructura comercial de Tu Vida</a><p>La empresa presenta su actividad mayorista para comercios y logística propia en La Plata. Las condiciones específicas para frescos se evaluarán antes del piloto.</p></div></li><li><span class="source-date">Organic Trade Association<br>04.03.2026</span><div><a href="https://ota.com/about-ota/press-releases/us-organic-marketplace-achieved-significant-growth-2025" target="_blank" rel="noopener noreferrer">El fresco dentro del mercado orgánico de Estados Unidos</a><p>La categoría de frutas y verduras orgánicas registró US$ 22.700 millones en 2025. Es una referencia internacional de otra escala y no demuestra demanda local ni equivale a producción agroecológica argentina.</p></div></li><li><span class="source-date">SENASA<br>Marco de referencia</span><div><a href="https://www.argentina.gob.ar/node/101134" target="_blank" rel="noopener noreferrer">Producción orgánica y certificación</a><p>La denominación orgánica está sujeta a un régimen específico. La comunicación comercial del proyecto debe corresponder al respaldo real de sus productos.</p></div></li></ul><p class="sources-note">La cantidad de familias, las superficies, la oferta disponible, la vinculación actual con espacios universitarios y las personas autorizadas para acordar operaciones se relevarán con ustedes. No se presentan aquí como datos verificados.</p></div></details>
+      </section>
     </div>
-    <div class="role">
-      <h3>Dicho con precisión</h3>
-      <p>Comunicamos "agroecológico". La palabra "orgánico" está regulada en Argentina y queda para lo que cuente con certificación.</p>
-    </div>
-  </div>
-</section>
-
-<section id="mercado">
-  <div class="sec-head">
-    <p class="mono">02 · Por qué ahora</p>
-    <h2>El mundo ya lo compra; acá el valor se queda en el medio</h2>
-    <p class="lead">Datos públicos que sostienen la idea. Toquen una barra para ver el detalle.</p>
-  </div>
-
-  <div class="chart" id="c-us">
-    <div>
-      <p class="mono">Estados Unidos, 2025</p>
-      <h3>La fruta y la verdura frescas son lo que más se vende en orgánico</h3>
-    </div>
-    <div class="bars" role="list"></div>
-    <p class="readout" aria-live="polite"></p>
-    <p class="src">Ventas en US$ miles de millones. Fuente: Organic Trade Association.</p>
-  </div>
-
-  <div class="chart" id="c-cepa">
-    <div>
-      <p class="mono">Argentina, enero de 2026</p>
-      <h3>Cuántas veces cuesta en el supermercado lo que en el Mercado Central</h3>
-    </div>
-    <div class="bars" role="list"></div>
-    <p class="readout" aria-live="polite"></p>
-    <p class="src">La línea marca 1×, el precio del Mercado Central de Buenos Aires. Fuente: <a href="https://infoecos.com.ar/wp-content/uploads/2026/02/2026.02.06_Observatorio_Frutas_y_Verduras_CEPA_enero26.pdf">CEPA, Observatorio de Frutas y Verduras</a>. El Mercado Central es mayorista, no precio de chacra.</p>
-  </div>
-
-  <div class="chart" id="c-came">
-    <div>
-      <p class="mono">Argentina, alimentos en general</p>
-      <h3>De cada $100 que paga el cliente, esto llega al productor</h3>
-    </div>
-    <div class="toggle" role="group" aria-label="Período">
-      <button type="button" data-v="22" aria-pressed="true">Septiembre 2025</button>
-      <button type="button" data-v="25.4" aria-pressed="false">Febrero 2026</button>
-    </div>
-    <div class="hund" aria-hidden="true"><div class="p"></div><div class="r">Todo lo demás que se suma en la cadena</div></div>
-    <p class="readout" aria-live="polite"></p>
-    <p class="src">Fuente: Indicador de Precios en Origen y Destino de CAME (<a href="https://www.redcame.org.ar/advf/documentos/2025/10/68f7bf92d1662.pdf">informe de septiembre</a>, <a href="https://mzagro.com.ar/ipod-came-febrero-2026-brecha-productor-consumidor/">febrero</a>). Son promedios nacionales; no hablan de ningún productor en particular.</p>
-  </div>
-
-  <div class="tiles">
-    <div class="tile">
-      <span class="mono">Argentina, 2025</span>
-      <div class="n">98<small>%</small></div>
-      <p>del volumen orgánico certificado se exporta. Solo 1,5% llega al consumo local (MAGyP y SENASA).</p>
-    </div>
-    <div class="tile">
-      <span class="mono">UTT, 2024</span>
-      <div class="n">8.000</div>
-      <p>bolsones por semana en unos 300 nodos de entrega, según <a href="https://www.baenegocios.com/negocios/ahorro-la-compra-comunitaria-de-bolsones-de-fruta-y-verdura-se-puso-de-moda-20240606-0092.html">Buenos Aires Negocios</a>.</p>
-    </div>
-    <div class="tile">
-      <span class="mono">Bolsón Soberano, 2020</span>
-      <div class="n">900<small>+ por mes</small></div>
-      <p>el doble que antes, y los productores recibían cerca del 59% del precio final (<a href="https://bichosdecampo.com/en-los-meses-de-pandemia-la-facultad-de-agronomia-de-la-uba-duplico-las-ventas-de-su-bolson-soberano">Bichos de Campo</a>).</p>
-    </div>
-  </div>
-</section>
-
-<section id="juntos">
-  <div class="sec-head">
-    <p class="mono">03 · Cómo trabajamos juntos</p>
-    <h2>Tareas distintas, sociedad igualitaria</h2>
-    <p class="lead">Es un acuerdo de empresa a empresa entre la asociación de productores y Tu Vida S.R.L. Ustedes se ocupan de producir. Tu Vida se ocupa de todo lo demás, incluida la llegada a los comercios y la logística: no necesitan transporte propio.</p>
-  </div>
-  <div class="roles">
-    <div class="role">
-      <span class="mono">La asociación de productores</span>
-      <h3>Producir y definir su mínimo</h3>
-      <ul>
-        <li>Cultivar, cosechar y clasificar.</li>
-        <li>Proponer el calendario de siembra.</li>
-        <li>Decirnos cuánto necesitan que les quede.</li>
-        <li>Designar a quien organice y los represente: presidente, coordinador o quien elijan.</li>
-      </ul>
-    </div>
-    <div class="role tv">
-      <span class="mono">Tu Vida S.R.L.</span>
-      <h3>Todo lo demás</h3>
-      <ul>
-        <li>Marca, diseño y presentación.</li>
-        <li>Tienda online, redes y atención al cliente.</li>
-        <li>Llegada a los comercios y ventas.</li>
-        <li>Logística: retiro en la finca, acopio y reparto.</li>
-        <li>Cobranza y cuentas abiertas para ambas partes.</li>
-      </ul>
-    </div>
-  </div>
-  <p class="callout">Tu Vida S.R.L., de la que Ceferino Bongiorno es dueño y socio mayorista, es una distribuidora mayorista de alimentos naturales, orgánicos y dietéticos de La Plata, con logística propia. La marca nueva es independiente, y se apoya en esa estructura.</p>
-
-  <p class="mono" style="margin: 36px 0 12px">El recorrido de un cajón</p>
-  <div class="path">
-    <div class="node"><span class="mono">Productores</span><b>La finca</b><span>Cosecha y clasifica.</span></div>
-    <div class="arrow" aria-hidden="true">→</div>
-    <div class="node you"><span class="mono">Tu Vida</span><b>Retiro y acopio</b><span>Pasamos a buscarlo.</span></div>
-    <div class="arrow" aria-hidden="true">→</div>
-    <div class="node you"><span class="mono">Tu Vida</span><b>Canales</b><ul><li>Verdulerías</li><li>Dietéticas y tiendas naturales</li><li>Autoservicios y supermercados</li><li>Restaurantes y comedores</li><li>Tienda online y apps</li></ul></div>
-    <div class="arrow" aria-hidden="true">→</div>
-    <div class="node"><span class="mono">Cliente</span><b>La mesa</b><span>Hogar o negocio.</span></div>
-  </div>
-  <p class="back">Lo que se vende cada semana vuelve a los productores como información para planificar la siembra.</p>
-</section>
-
-<section id="canales">
-  <div class="sec-head">
-    <p class="mono">04 · Llegada a los comercios</p>
-    <h2>Cada canal compra distinto, así que cada uno recibe un formato distinto</h2>
-    <p class="lead">En Estados Unidos las cadenas tienen góndolas abiertas con frío y el cliente toma producto envasado. Acá esas góndolas no existen, y en las verdulerías el cliente elige de cajones. Por eso lo nuestro se adapta al mueble y a la costumbre de cada lugar.</p>
-  </div>
-  <div class="tabs" role="tablist" aria-label="Canales"></div>
-  <div class="panel" id="panel" role="tabpanel"></div>
-  <p class="src" style="margin-top:12px">Primera propuesta. La afinamos con ustedes y visitando locales de La Plata.</p>
-</section>
-
-<section id="piso">
-  <div class="sec-head">
-    <p class="mono">05 · El mínimo</p>
-    <h2>Construimos el número juntos</h2>
-    <p class="lead">Les pedimos que nos digan cuánto necesitan que les quede: es el punto de partida. Lo ponemos junto a sus costos y a los precios del mercado y lo ajustamos entre todos, para que el precio final siga siendo atractivo para el cliente y el proyecto crezca para ambos. Cinco pasos, toquen cada uno.</p>
-  </div>
-  <div class="steps" id="steps"></div>
-  <p class="mono" style="margin: 30px 0 4px">Planilla de la primera charla, para completar entre todos</p>
-  <div class="sheet">
-    <table>
-      <thead><tr>
-        <th>Producto</th><th>Precio en su puesto ($/kg)</th><th>Kilos por semana</th><th>Costo de producirlo ($/kg)</th><th>Pérdida (%)</th><th>Mínimo, primera selección ($/kg)</th><th>Mínimo, segunda selección ($/kg)</th><th>Meses de cosecha</th>
-      </tr></thead>
-      <tbody>
-        <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="src" style="margin-top:10px">Se completa por producto y por temporada. Segunda selección: lo que va al bolsón u otra venta aparte, con un mínimo propio.</p>
-</section>
-
-<section id="reglas">
-  <div class="sec-head">
-    <p class="mono">06 · Reglas de juego</p>
-    <h2>Lo que nos comprometemos a respetar</h2>
-  </div>
-  <div class="rules">
-    <div class="rule"><b>Cuentas abiertas</b><span>Costos, ventas y gastos visibles para ambas partes, y revisados cada tres meses.</span></div>
-    <div class="rule"><b>Un solo interlocutor</b><span>La asociación designa a quien organice y la represente, y con esa persona acordamos todo. Cómo se organizan y reparten adentro es asunto de ustedes.</span></div>
-    <div class="rule"><b>Precios competitivos</b><span>Cada mínimo se contrasta con costos reales y con el mercado, para que el precio final sea atractivo y la venta crezca para todos.</span></div>
-    <div class="rule"><b>Ganancias compartidas</b><span>Cómo se reparten lo definimos juntos, con los números de ustedes sobre la mesa y sin compromiso previo.</span></div>
-    <div class="rule"><b>Nada obligatorio al empezar</b><span>Lo primero es una carta de intención sin obligaciones. Un acuerdo más formal viene después, cuando todos lo vean claro.</span></div>
-    <div class="rule"><b>Su imagen, con su permiso</b><span>El nombre, las fotos y las redes de sus fincas se usan solo con un acuerdo escrito con la asociación.</span></div>
-    <div class="rule"><b>Crecer de a poco</b><span>Empezamos con los productos que cierran y sumamos a medida que la venta se sostiene.</span></div>
-  </div>
-</section>
-
-<section id="siguiente">
-  <div class="close">
-    <p class="mono">07 · Lo que sigue</p>
-    <h2>Por ahora les pedimos tres cosas</h2>
-    <ol>
-      <li>Leer esta propuesta con calma y anotar dudas.</li>
-      <li>Pensar la pregunta: ¿cuánto quieren que les quede, como mínimo?</li>
-      <li>Elegir un día para charlar en persona.</li>
-    </ol>
-    <div>
-      <span class="mono">Quién les propone esto</span>
-      <p style="margin-top:6px"><b>Ceferino Bongiorno</b>, dueño y socio mayorista de Tu Vida S.R.L.</p>
-      <p style="margin-top:6px">Teléfono y WhatsApp: <a href="tel:+17282057857" style="color:var(--paper)">+1 (728) 205-7857</a><br>Correo: <a href="mailto:avisos@tuvida.com.ar" style="color:var(--paper)">avisos@tuvida.com.ar</a><br>Web: <a href="https://tuvida.com.ar" style="color:var(--paper)">tuvida.com.ar</a></p>
-    </div>
-  </div>
-  <details>
-    <summary>Fuentes</summary>
-    <ul>
-      <li>Organic Trade Association, ventas de alimentos orgánicos en EE.UU., 2025.</li>
-      <li>CEPA, Observatorio de Frutas y Verduras, enero de 2026.</li>
-      <li>CAME, Indicador de Precios en Origen y Destino, septiembre de 2025 y febrero de 2026.</li>
-      <li>MAGyP y SENASA, comercialización de productos orgánicos, 2025.</li>
-      <li>Buenos Aires Negocios, compra comunitaria de bolsones, junio de 2024.</li>
-      <li>Bichos de Campo, Bolsón Soberano de la FAUBA, 2020.</li>
-    </ul>
-  </details>
-</section>
-
-</div>
-</main>
-<footer><div class="wrap">Documento de trabajo. Green Point es un nombre provisorio. Las cifras citadas son de fuentes públicas; las del proyecto se arman con la asociación.</div></footer>
-
-<script>
-(function () {
-  var fmt = function (n, d) { return n.toLocaleString('es-AR', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); };
-
-  function barChart(id, rows, max, opts) {
-    var root = document.getElementById(id);
-    var box = root.querySelector('.bars');
-    var out = root.querySelector('.readout');
-    var els = [];
-    rows.forEach(function (r, i) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'bar' + (r.hot ? ' hot' : '');
-      b.setAttribute('role', 'listitem');
-      b.innerHTML = '<span class="lbl"></span><span class="track"><span class="fill" style="width:0"></span><span class="val"></span></span>';
-      b.querySelector('.lbl').textContent = r.label;
-      b.querySelector('.val').textContent = r.text;
-      if (opts && opts.baseline) {
-        var l = document.createElement('span'); l.className = 'baseline'; l.style.left = (opts.baseline / max * 100) + '%';
-        b.querySelector('.track').appendChild(l);
-      }
-      function sel() { els.forEach(function (e) { e.classList.remove('sel'); }); b.classList.add('sel'); out.textContent = r.note; }
-      b.addEventListener('click', sel); b.addEventListener('mouseenter', sel); b.addEventListener('focus', sel);
-      box.appendChild(b); els.push(b);
-      requestAnimationFrame(function () { setTimeout(function () { b.querySelector('.fill').style.width = (r.v / max * 100) + '%'; }, 60 + i * 60); });
-    });
-    var start = rows.findIndex(function (r) { return r.hot; });
-    out.textContent = rows[start < 0 ? 0 : start].note;
-    els[start < 0 ? 0 : start].classList.add('sel');
-  }
-
-  barChart('c-us', [
-    { label: 'Frutas y verduras frescas', v: 22.7, text: '22,7', hot: true, note: 'Frutas y verduras frescas: US$ 22,7 mil millones, cerca del 30% de los US$ 76,6 mil millones que se vendieron en total.' },
-    { label: 'Alimentos envasados', v: 15.7, text: '15,7', note: 'Alimentos envasados: US$ 15,7 mil millones.' },
-    { label: 'Bebidas', v: 10.2, text: '10,2', note: 'Bebidas: US$ 10,2 mil millones.' },
-    { label: 'Lácteos y huevos', v: 9.6, text: '9,6', note: 'Lácteos y huevos: US$ 9,6 mil millones.' },
-    { label: 'Textiles', v: 2.7, text: '2,7', note: 'Textiles: US$ 2,7 mil millones.' },
-    { label: 'Suplementos', v: 2.4, text: '2,4', note: 'Suplementos: US$ 2,4 mil millones.' },
-    { label: 'Cuidado personal', v: 1.4, text: '1,4', note: 'Cuidado personal: US$ 1,4 mil millones.' }
-  ], 25);
-
-  barChart('c-cepa', [
-    { label: 'Lechuga', v: 2.4, text: '2,4×', hot: true, note: 'Lechuga: en el supermercado cuesta 2,4 veces lo que en el Mercado Central.' },
-    { label: 'Papa', v: 2.2, text: '2,2×', note: 'Papa: 2,2 veces.' },
-    { label: 'Tomate', v: 1.6, text: '1,6×', note: 'Tomate: 1,6 veces.' }
-  ], 2.6, { baseline: 1 });
-  document.querySelector('#c-cepa .readout').textContent = 'Lechuga: en el supermercado cuesta 2,4 veces lo que en el Mercado Central. En conjunto, la hortaliza costaba 88,6% más en enero de 2026.';
-
-  // share bar
-  (function () {
-    var root = document.getElementById('c-came');
-    var p = root.querySelector('.p'), out = root.querySelector('.readout');
-    var btns = root.querySelectorAll('.toggle button');
-    function set(v) {
-      p.style.width = v + '%'; p.textContent = '$' + fmt(+v, v % 1 ? 1 : 0);
-      out.textContent = 'De cada $100 que paga el cliente, al productor le llegan $' + fmt(+v, v % 1 ? 1 : 0) + ' en promedio. El resto se reparte entre transporte, empaque, mayorista y comercio.';
+    <section class="next" aria-labelledby="next-title"><div class="wrap next-grid"><div><p class="eyebrow"><span class="dot" aria-hidden="true"></span>El siguiente paso</p><h2 id="next-title">Pongámosle una fecha<br><em>a la conversación.</em></h2><p>Una visita para conocernos, escuchar a las familias y ver qué primera operación tendría sentido construir juntos.</p><div class="actions"><a class="button gold" href="https://wa.me/17282057857?text=Hola%20Ceferino%2C%20vimos%20la%20propuesta%20Green%20Point%20y%20queremos%20coordinar%20una%20visita." target="_blank" rel="noopener noreferrer">Coordinar una charla <span aria-hidden="true">↗</span></a><button class="button gold" type="button" id="print-proposal" hidden>Imprimir / guardar PDF</button></div></div><div class="contact"><p class="eyebrow">Contacto del proyecto</p><div class="name">Ceferino Bongiorno</div><p>Por Tu Vida S.R.L.<br><a href="tel:+17282057857">+1 (728) 205-7857</a><br><a href="mailto:avisos@tuvida.com.ar?subject=Propuesta%20Green%20Point">avisos@tuvida.com.ar</a></p><p class="institution">Contacto institucional de Tu Vida<br><a href="https://wa.me/5491165829089" target="_blank" rel="noopener noreferrer">+54 9 11 6582-9089</a><br><a href="mailto:hola@tuvida.com.ar">hola@tuvida.com.ar</a><br><a href="https://tuvida.com.ar/" target="_blank" rel="noopener noreferrer">tuvida.com.ar</a></p></div></div></section>
+  </main>
+  <footer class="footer"><div class="wrap footer-inner"><p>Green Point es un nombre provisorio. Documento de trabajo para Delina y las familias de Cotepo. Las condiciones operativas, económicas y de uso de marca se acordarían antes de comenzar. V.02 · 2 de noviembre de 2026.</p><a href="#inicio">Volver al comienzo ↑</a></div></footer>
+  <a class="to-top no-print" href="#inicio" aria-label="Volver al comienzo" id="to-top" hidden>↑</a>
+  <script>
+  'use strict';
+  (() => {
+    // Single-file static page. No server submissions, analytics, or external scripts.
+    // Project contact preserved from the supplied proposal; institutional contact is separate.
+    const PROJECT_WHATSAPP = '17282057857';
+    const STORAGE_KEY = 'greenpoint-cotepo-notes-v2';
+    const $ = (id) => document.getElementById(id);
+    const status = (message) => { $('form-status').textContent = message; };
+    const form = $('notes-form');
+    const remember = $('remember-notes');
+    const fields = ['note-name','note-products','note-availability','note-questions'];
+    const topicInputs = [...form.querySelectorAll('input[name="topics"]')];
+    const readData = () => ({name:$('note-name').value.trim(),products:$('note-products').value.trim(),availability:$('note-availability').value.trim(),questions:$('note-questions').value.trim(),topics:topicInputs.filter(i=>i.checked).map(i=>i.value)});
+    function summary() {
+      const d = readData();
+      const lines = ['Green Point · Temas para conversar','Propuesta para Delina y las familias de Cotepo',''];
+      if(d.name) lines.push('Nombre o grupo: '+d.name);
+      if(d.products) lines.push('Productos o temporada: '+d.products);
+      if(d.availability) lines.push('Disponibilidad orientativa: '+d.availability);
+      if(d.topics.length) lines.push('Queremos conversar sobre: '+d.topics.join(', '));
+      if(d.questions) lines.push('', 'Preguntas o propuestas:', d.questions);
+      if(!d.name&&!d.products&&!d.availability&&!d.questions&&!d.topics.length) lines.push('Queremos conocer mejor la propuesta y coordinar una charla.');
+      lines.push('','Estas notas no confirman pedidos ni condiciones comerciales.');
+      return lines.join('\n');
     }
-    btns.forEach(function (b) {
-      b.addEventListener('click', function () {
-        btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-        set(b.getAttribute('data-v'));
-      });
+    function updatePrintNotes(){
+      const d = readData();
+      $('print-notes').textContent = (d.name||d.products||d.availability||d.questions||d.topics.length) ? summary() : '';
+    }
+    function saveNotes(){
+      updatePrintNotes();
+      if(!remember.checked) return;
+      try{localStorage.setItem(STORAGE_KEY,JSON.stringify(readData()));}
+      catch{remember.checked=false;status('El navegador no permite guardar las notas. Pueden copiarlas o descargarlas.');}
+    }
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw) {
+        const data = JSON.parse(raw);
+        if(data&&typeof data==='object'&&!Array.isArray(data)) {
+          const mapping = {'note-name':'name','note-products':'products','note-availability':'availability','note-questions':'questions'};
+          fields.forEach(id=>{const v=data[mapping[id]];if(typeof v==='string') $(id).value=v.slice(0,$(id).maxLength);});
+          if(Array.isArray(data.topics)) topicInputs.forEach(i=>{i.checked=data.topics.includes(i.value);});
+          remember.checked=true;
+          status('Recuperamos las notas guardadas en este navegador.');
+        }
+      }
+    } catch {status('No se pudieron recuperar las notas guardadas. Pueden preparar un resumen nuevo.');}
+    fields.forEach(id=>$(id).addEventListener('input',saveNotes));
+    topicInputs.forEach(i=>i.addEventListener('change',saveNotes));
+    remember.addEventListener('change',()=>{
+      if(remember.checked){saveNotes();if(remember.checked)status('Las notas se recordarán únicamente en este navegador.');}
+      else {try{localStorage.removeItem(STORAGE_KEY);status('Se quitó la copia guardada. Las notas siguen visibles en esta página.');}catch{status('No pudimos quitar la copia guardada. Pueden borrar los datos de este sitio desde el navegador.');}}
     });
-    p.style.width = '0%';
-    setTimeout(function () { set('22'); }, 200);
+    form.addEventListener('submit',e=>e.preventDefault());
+    $('share-notes').addEventListener('click',()=>{
+      const text = 'Hola Ceferino, vimos la propuesta y queremos conversar.\n\n'+summary();
+      const opened = window.open('https://wa.me/'+PROJECT_WHATSAPP+'?text='+encodeURIComponent(text),'_blank');
+      if(opened) {opened.opener=null;status('Se abrió WhatsApp con el resumen. Revisen el mensaje antes de enviarlo.');}
+      else status('Si WhatsApp no se abrió, permitan la ventana emergente o copien el resumen y usen el contacto directo.');
+    });
+    $('download-notes').addEventListener('click',()=>{
+      const blob=new Blob(['\ufeff'+summary()],{type:'text/plain;charset=utf-8'});
+      const url=URL.createObjectURL(blob);const a=document.createElement('a');
+      a.href=url;a.download='Green_Point_notas_para_conversar.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+      status('Las notas se descargaron como archivo de texto. No se enviaron a Tu Vida.');
+    });
+    $('copy-notes').addEventListener('click',async()=>{
+      const text=summary();let copied=false;
+      if(navigator.clipboard&&window.isSecureContext){try{await navigator.clipboard.writeText(text);copied=true;}catch{}}
+      if(!copied){
+        const helper=document.createElement('textarea');helper.value=text;helper.setAttribute('readonly','');helper.setAttribute('aria-label','Resumen para copiar');helper.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0';document.body.appendChild(helper);helper.focus();helper.select();
+        try{copied=document.execCommand('copy');}catch{}helper.remove();$('copy-notes').focus();
+      }
+      status(copied?'Resumen copiado. Pueden pegarlo donde prefieran.':'El navegador no permitió copiar. Pueden descargar las notas.');
+    });
+    $('clear-notes').addEventListener('click',()=>{
+      const d=readData();
+      if((d.name||d.products||d.availability||d.questions||d.topics.length||remember.checked)&&!window.confirm('¿Borrar las notas de esta página y su copia guardada en este navegador?'))return;
+      form.reset();let removed=true;try{localStorage.removeItem(STORAGE_KEY);}catch{removed=false;}
+      updatePrintNotes();status(removed?'Se borraron las notas y la copia guardada en este navegador.':'Se borraron las notas visibles. Para quitar la copia guardada, borren los datos de este sitio desde el navegador.');
+    });
+    // Progressive enhancement: all examples and essential content exist in the HTML.
+    const tabs=[...$('format-tabs').querySelectorAll('[role="tab"]')];
+    const panels=tabs.map(t=>$(t.getAttribute('aria-controls')));
+    function activate(index,focus=false){tabs.forEach((t,i)=>{t.setAttribute('aria-selected',String(i===index));t.tabIndex=i===index?0:-1;panels[i].hidden=i!==index;panels[i].tabIndex=0;});if(focus)tabs[index].focus();}
+    tabs.forEach((t,i)=>{
+      t.addEventListener('click',()=>activate(i));
+      t.addEventListener('keydown',e=>{let next=i;if(e.key==='ArrowRight')next=(i+1)%tabs.length;else if(e.key==='ArrowLeft')next=(i+tabs.length-1)%tabs.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=tabs.length-1;else return;e.preventDefault();activate(next,true);});
+    });
+    activate(0);$('format-tabs').hidden=false;
+    const menu=$('mobile-menu');menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.open=false;}));
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){menu.open=false;menu.querySelector('summary').focus();}});
+    let ticking=false;const progress=$('progress'),topLink=$('to-top');
+    function updateProgress(){const height=document.documentElement.scrollHeight-innerHeight;progress.style.width=(height>0?Math.min(100,Math.max(0,scrollY/height*100)):0)+'%';topLink.hidden=scrollY<700;ticking=false;}
+    addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(updateProgress);ticking=true;}},{passive:true});addEventListener('resize',updateProgress);updateProgress();
+    // Open disclosures for printing, then restore their previous state.
+    let disclosureState=[];
+    addEventListener('beforeprint',()=>{updatePrintNotes();disclosureState=[...document.querySelectorAll('details.disclosure')].map(d=>[d,d.open]);disclosureState.forEach(([d])=>{d.open=true;});});
+    addEventListener('afterprint',()=>{disclosureState.forEach(([d,wasOpen])=>{d.open=wasOpen;});disclosureState=[];});
+    $('print-proposal').addEventListener('click',()=>window.print());$('print-proposal').hidden=false;
+    updatePrintNotes();form.hidden=false;$('notes-fallback').hidden=true;
   })();
-
-  // channels
-  var ch = [
-    { n: 'Verdulerías', a: 'Se vende a granel, en cajones; el cliente elige y se pesa en el momento.', b: 'Un cajón propio, rotulado y separado del convencional, en el frente del local, con cartel de la familia, código QR a la finca y precio por kilo.', c: 'Es el formato que el cliente ya conoce. Un envase cerrado le quita el hábito de elegir lo que se lleva.' },
-    { n: 'Dietéticas y tiendas naturales', a: 'Producto envasado, mostrador y heladeras chicas. El cliente ya busca lo natural.', b: 'Bandejas o bolsas selladas de peso fijo, con ficha de la finca, en una heladera o exhibidor junto a la caja. Entrega dos veces por semana.', c: 'Hay poco espacio y no hay balanza para fresco. A la vista y junto a la caja, el producto se vende solo.' },
-    { n: 'Autoservicios y supermercados', a: 'Verdulería interna a granel o bandejas con balanza, y caja con código de barras.', b: 'Cajonera o islote de marca en la sección de frutas y verduras, y paquetes de peso fijo con código de barras. Empezamos por autoservicios independientes, donde decide el dueño.', c: 'El islote da visibilidad sin necesitar frío, y el código de barras evita el pesaje en caja.' },
-    { n: 'Restaurantes y comedores', a: 'Compran por pedido, sin exhibición.', b: 'Cajón de 5 a 10 kg por producto, con entrega fija y el nombre de la finca en la carta.', c: 'Buscan regularidad, calidad y saber de dónde viene lo que sirven.' },
-    { n: 'Tienda online y apps', a: 'El cliente compra por foto y confianza, sin ver el producto.', b: 'Ficha de marca con foto de la finca, packs de peso fijo y una selección semanal que el cliente confirma. Las apps de delivery sirven de vidriera.', c: 'La confianza se construye mostrando quién produce. Con una selección semanal, las familias también saben qué sembrar.' }
-  ];
-  var tabs = document.querySelector('.tabs'), panel = document.getElementById('panel');
-  function show(i) {
-    Array.prototype.forEach.call(tabs.children, function (t, j) { t.setAttribute('aria-selected', j === i ? 'true' : 'false'); });
-    var c = ch[i];
-    panel.innerHTML = '<div><span class="mono">Cómo se vende hoy</span><p></p></div><div><span class="mono">Cómo lo presentamos</span><p></p></div><div><span class="mono">Por qué así</span><p></p></div>';
-    var ps = panel.querySelectorAll('p'); ps[0].textContent = c.a; ps[1].textContent = c.b; ps[2].textContent = c.c;
-  }
-  ch.forEach(function (c, i) {
-    var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.textContent = c.n;
-    b.addEventListener('click', function () { show(i); }); tabs.appendChild(b);
-  });
-  show(0);
-
-  // steps
-  var st = [
-    ['Una charla, sin números nuestros', ['Con quien la asociación elija como referente, nos cuentan cómo venden hoy en sus puestos de 520 y 116 y en el Mercado Central: a qué precio por kilo, cuánto por semana, qué se pierde y cuánto cuesta producir.']],
-    ['La pregunta', ['¿Cuánto quieren que les quede, como mínimo, por esta asociación? No hace falta responder en el momento: piénsenlo con calma.', 'El mínimo es lo que les queda por kilo, puesto en la finca, cosechado y clasificado. Nosotros retiramos y llevamos.']],
-    ['Volvemos con los datos', ['Les llevamos todo ordenado: qué vamos a hacer, cómo, por qué, dónde y qué ganancias tendrían, producto por producto.']],
-    ['Ajustamos juntos', ['Ponemos cada mínimo al lado de sus costos y de los precios de venta posibles. Si un producto queda demasiado caro para el cliente, buscamos juntos cómo bajar costos o ajustar el piso, y empezamos por los que cierran.', 'Pedimos dos mínimos: uno para la primera selección y otro para la segunda, la que va al bolsón.']],
-    ['Lo dejamos por escrito', ['Una carta de intención sin obligaciones, con el piso de cada producto y una revisión cada tres meses con las cuentas a la vista.']]
-  ];
-  var sc = document.getElementById('steps');
-  st.forEach(function (s, i) {
-    var d = document.createElement('div'); d.className = 'step'; d.setAttribute('data-open', i === 1 ? 'true' : 'false');
-    d.innerHTML = '<button type="button" aria-expanded="' + (i === 1) + '"><span class="no">0' + (i + 1) + '</span><span class="t"></span><span class="chev" aria-hidden="true">›</span></button><div class="body"></div>';
-    d.querySelector('.t').textContent = s[0];
-    var body = d.querySelector('.body');
-    s[1].forEach(function (t) { var p = document.createElement('p'); p.textContent = t; body.appendChild(p); });
-    d.querySelector('button').addEventListener('click', function () {
-      var o = d.getAttribute('data-open') !== 'true'; d.setAttribute('data-open', o); this.setAttribute('aria-expanded', o);
-    });
-    sc.appendChild(d);
-  });
-})();
-</script>
+  </script>
 </body>
 </html>
